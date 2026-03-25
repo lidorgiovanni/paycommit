@@ -20,7 +20,7 @@ SMTP_CONFIG = {
 DEV_MODE = not SMTP_CONFIG["user"]  # אם אין SMTP — מצב פיתוח, OTP מוצג בתגובה
 
 app = FastAPI(title="Payment Commitments API")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], allow_credentials=True)
 
 
 @app.on_event("startup")
