@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PayCommit — Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #0a0d1a; color: #e8edf8; overflow: hidden; }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+  .slide { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 80px; opacity: 0; transition: opacity .4s; }
+  .slide.active { display: flex; opacity: 1; }
+
+  /* NAV */
+  .nav { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 20px; z-index: 100; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 12px 24px; backdrop-filter: blur(10px); }
+  .nav button { background: none; border: none; color: #a0a8d0; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; transition: color .2s; }
+  .nav button:hover { color: #fff; }
+  .nav .counter { font-size: 0.82rem; color: #5a6380; min-width: 50px; text-align: center; }
+  .dot-nav { display: flex; gap: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #2e3a5e; cursor: pointer; transition: all .2s; }
+  .dot.active { background: #6c63ff; width: 20px; border-radius: 3px; }
+
+  /* SLIDE 1 — HERO */
+  .s1 { background: radial-gradient(ellipse at 30% 40%, rgba(108,99,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 60%, rgba(0,200,150,0.08) 0%, transparent 50%), #0a0d1a; }
+  .s1 .tag { background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.3); color: #9d97ff; border-radius: 50px; padding: 6px 18px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 32px; }
+  .s1 h1 { font-size: 4.5rem; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-align: center; margin-bottom: 24px; }
+  .s1 h1 span { background: linear-gradient(135deg, #6c63ff, #00c896); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .s1 .sub { font-size: 1.2rem; color: #7b82a8; text-align: center; max-width: 600px; line-height: 1.7; margin-bottom: 48px; }
+  .s1 .pills { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .pill { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 50px; padding: 8px 20px; font-size: 0.85rem; color: #a0a8d0; }
+
+  /* SLIDE 2 — PROBLEM */
+  .s2 { background: #0a0d1a; }
+  .slide-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6c63ff; margin-bottom: 16px; }
+  .slide h2 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 48px; }
+  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 900px; }
+  .problem-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 28px; }
+  .problem-card .icon { font-size: 2rem; margin-bottom: 16px; }
+  .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .problem-card p { font-size: 0.85rem; color: #7b82a8; line-height: 1.6; }
+  .problem-card.highlight { border-color: rgba(255,77,109,0.3); background: rgba(255,77,109,0.04); }
+
+  /* SLIDE 3 — SOLUTION */
+  .s3 { background: #0a0d1a; }
+  .solution-wrap { display: flex; gap: 60px; align-items: center; width: 100%; max-width: 1000px; }
+  .solution-text { flex: 1; }
+  .solution-text .big-quote { font-size: 1.6rem; font-weight: 700; line-height: 1.5; color: #e8edf8; margin-bottom: 32px; }
+  .solution-text .big-quote span { color: #6c63ff; }
+  .solution-features { display: flex; flex-direction: column; gap: 16px; }
+  .feat { display: flex; align-items: flex-start; gap: 14px; }
+  .feat-dot { width: 8px; height: 8px; border-radius: 50%; background: #00c896; margin-top: 6px; flex-shrink: 0; }
+  .feat-text h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; }
+  .feat-text p { font-size: 0.82rem; color: #7b82a8; }
+  .flow-visual { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .flow-step { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+  .flow-step.active-step { border-color: rgba(108,99,255,0.4); background: rgba(108,99,255,0.06); }
+  .flow-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(108,99,255,0.2); color: #9d97ff; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .flow-step-text { font-size: 0.88rem; font-weight: 500; }
+  .flow-arrow { text-align: center; color: #2e3a5e; font-size: 0.8rem; }
+
+  /* SLIDE 4 — MARKET */
+  .s4 { background: #0a0d1a; }
+  .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 900px; margin-bottom: 40px; }
+  .market-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 32px 24px; text-align: center; }
+  .market-card .num { font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #6c63ff, #00c896); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .market-card .desc { font-size: 0.82rem; color: #7b82a8; line-height: 1.5; }
+  .market-note { font-size: 0.85rem; color: #5a6380; text-align: center; }
+
+  /* SLIDE 5 — FOR BANKS */
+  .s5 { background: #0a0d1a; }
+  .bank-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 860px; }
+  .bank-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 28px; }
+  .bank-card .icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .bank-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: #e8edf8; }
+  .bank-card p { font-size: 0.83rem; color: #7b82a8; line-height: 1.6; }
+  .bank-card.featured { border-color: rgba(108,99,255,0.35); background: rgba(108,99,255,0.05); }
+
+  /* SLIDE 6 — TECH */
+  .s6 { background: #0a0d1a; }
+  .tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; width: 100%; max-width: 860px; }
+  .tech-block h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6c63ff; margin-bottom: 16px; }
+  .tech-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.88rem; color: #a0a8d0; }
+  .tech-item::before { content: '✓'; color: #00c896; font-weight: 700; }
+  .state-machine { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 20px; font-family: monospace; font-size: 0.78rem; color: #7b82a8; line-height: 2; }
+  .state-machine .s-active { color: #6c63ff; font-weight: 700; }
+  .state-machine .s-end { color: #ff4d6d; }
+
+  /* SLIDE 7 — CTA */
+  .s7 { background: radial-gradient(ellipse at 50% 50%, rgba(108,99,255,0.12) 0%, transparent 70%), #0a0d1a; }
+  .s7 h2 { font-size: 3.2rem; font-weight: 800; letter-spacing: -1.5px; text-align: center; margin-bottom: 20px; }
+  .s7 h2 span { background: linear-gradient(135deg, #6c63ff, #00c896); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .s7 .sub { font-size: 1.1rem; color: #7b82a8; text-align: center; margin-bottom: 48px; max-width: 500px; }
+  .cta-boxes { display: flex; gap: 20px; }
+  .cta-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px 32px; text-align: center; min-width: 200px; }
+  .cta-box h4 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #5a6380; margin-bottom: 10px; }
+  .cta-box p { font-size: 0.95rem; color: #e8edf8; font-weight: 500; }
+  .cta-box.main { border-color: rgba(108,99,255,0.4); background: rgba(108,99,255,0.08); }
+  .cta-box.main p { color: #9d97ff; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1: HERO -->
+  <div class="slide s1 active" id="slide-1">
+    <div class="tag">Fintech Infrastructure</div>
+    <h1>Pay<span>Commit</span></h1>
+    <p class="sub">שכבת התחייבות תשלום דיגיטלית מעל התשתית הבנקאית הקיימת — חכמה, מחייבת, ומאובטחת</p>
+    <div class="pills">
+      <div class="pill">🔐 חתימה דיגיטלית</div>
+      <div class="pill">📊 State Machine</div>
+      <div class="pill">🔍 Audit Trail מלא</div>
+      <div class="pill">🏦 B2B Ready</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEM -->
+  <div class="slide s2" id="slide-2">
+    <div class="slide-label">הבעיה</div>
+    <h2>אין דרך טובה להתחייב לתשלום עתידי</h2>
+    <div class="problem-grid">
+      <div class="problem-card highlight">
+        <div class="icon">📄</div>
+        <h3>צ'ק — מיושן</h3>
+        <p>נייר, אין מעקב, אין סטטוסים, קשה לביטול, סיכון זיוף</p>
+      </div>
+      <div class="problem-card highlight">
+        <div class="icon">⚡</div>
+        <h3>ביט / העברה — מיידי בלבד</h3>
+        <p>אין אפשרות לתזמן התחייבות עתידית עם תנאים</p>
+      </div>
+      <div class="problem-card highlight">
+        <div class="icon">📑</div>
+        <h3>חוזה — מסורבל</h3>
+        <p>עורך דין, זמן, עלות — לא מתאים לעסקאות יומיומיות</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SOLUTION -->
+  <div class="slide s3" id="slide-3">
+    <div class="slide-label">הפתרון</div>
+    <div class="solution-wrap">
+      <div class="solution-text">
+        <div class="big-quote">"צ'ק דיגיטלי — אבל <span>חכם וגמיש</span> יותר"</div>
+        <div class="solution-features">
+          <div class="feat"><div class="feat-dot"></div><div class="feat-text"><h4>התחייבות מחייבת</h4><p>חתימה דיגיטלית SHA256 שנועלת את הנתונים</p></div></div>
+          <div class="feat"><div class="feat-dot"></div><div class="feat-text"><h4>Lifecycle מלא</h4><p>יצירה → חתימה → שליחה → קבלה → מימוש</p></div></div>
+          <div class="feat"><div class="feat-dot"></div><div class="feat-text"><h4>Audit Trail</h4><p>כל פעולה נשמרת — מי, מתי, מה</p></div></div>
+          <div class="feat"><div class="feat-dot"></div><div class="feat-text"><h4>ללא רגולציה בהתחלה</h4><p>הסכם דיגיטלי — לא תשלום, לא בנק</p></div></div>
+        </div>
+      </div>
+      <div class="flow-visual">
+        <div class="flow-step active-step"><div class="flow-num">1</div><div class="flow-step-text">CREATED — יצירת התחייבות</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step active-step"><div class="flow-num">2</div><div class="flow-step-text">SIGNED — חתימה דיגיטלית</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step active-step"><div class="flow-num">3</div><div class="flow-step-text">SENT — שליחה לנמען</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step active-step"><div class="flow-num">4</div><div class="flow-step-text">ACCEPTED — אישור הנמען</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step active-step"><div class="flow-num">5</div><div class="flow-step-text">REDEEMED — מימוש</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: MARKET -->
+  <div class="slide s4" id="slide-4">
+    <div class="slide-label">שוק</div>
+    <h2>הזדמנות עצומה</h2>
+    <div class="market-grid">
+      <div class="market-card"><div class="num">₪2.1T</div><div class="desc">היקף תשלומים עסקיים שנתי בישראל</div></div>
+      <div class="market-card"><div class="num">40%</div><div class="desc">מהעסקים הקטנים עדיין משתמשים בצ'קים</div></div>
+      <div class="market-card"><div class="num">0</div><div class="desc">פתרונות דיגיטליים מקומיים לניהול התחייבויות</div></div>
+    </div>
+    <div class="market-note">* נתוני בנק ישראל ולמ"ס 2023</div>
+  </div>
+
+  <!-- SLIDE 5: FOR BANKS -->
+  <div class="slide s5" id="slide-5">
+    <div class="slide-label">למה זה טוב לבנקים</div>
+    <h2>שכבה מעל — לא מתחרה</h2>
+    <div class="bank-grid">
+      <div class="bank-card featured">
+        <div class="icon">🏦</div>
+        <h3>אתם ממשיכים להזיז כסף</h3>
+        <p>PayCommit מנהל את ההתחייבות לפני התשלום. התשתית הבנקאית לא משתנה.</p>
+      </div>
+      <div class="bank-card featured">
+        <div class="icon">📋</div>
+        <h3>Audit Trail רגולטורי</h3>
+        <p>כל התחייבות מתועדת מלאה — מפחית סיכון משפטי ועומד בדרישות Basel III.</p>
+      </div>
+      <div class="bank-card">
+        <div class="icon">💳</div>
+        <h3>הזדמנות אשראי חדשה</h3>
+        <p>התחייבות חתומה = בטוחה. אפשר לתת מימון מראש על בסיס ההתחייבות.</p>
+      </div>
+      <div class="bank-card">
+        <div class="icon">🔄</div>
+        <h3>תחליף לצ'ק הדיגיטלי</h3>
+        <p>הבנקים מנסים לבנות צ'ק דיגיטלי שנים. זה כבר בנוי, עובד, ומוכן לאינטגרציה.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: TECH -->
+  <div class="slide s6" id="slide-6">
+    <div class="slide-label">טכנולוגיה</div>
+    <h2>בנוי נכון מהיום הראשון</h2>
+    <div class="tech-grid">
+      <div class="tech-block">
+        <h3>ארכיטקטורה</h3>
+        <div class="tech-item">FastAPI — Stateless REST API</div>
+        <div class="tech-item">State Machine — מעברים חוקיים בלבד</div>
+        <div class="tech-item">SHA256 Digital Signature</div>
+        <div class="tech-item">Audit Log — כל פעולה נשמרת</div>
+        <div class="tech-item">SQLite → PostgreSQL Ready</div>
+      </div>
+      <div class="tech-block">
+        <h3>State Machine</h3>
+        <div class="state-machine">
+CREATED<br/>
+&nbsp;&nbsp;↓<br/>
+<span class="s-active">SIGNED</span> ← חתימה דיגיטלית<br/>
+&nbsp;&nbsp;↓<br/>
+SENT → ACCEPTED<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REDEEMED ✓<br/>
+<span class="s-end">CANCELED / REJECTED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: CTA -->
+  <div class="slide s7" id="slide-7">
+    <div class="slide-label">השלב הבא</div>
+    <h2>בואו נבנה את זה <span>ביחד</span></h2>
+    <p class="sub">MVP עובד, API מוכן, מחפשים שותף בנקאי לפיילוט</p>
+    <div class="cta-boxes">
+      <div class="cta-box main"><h4>מה אנחנו מציעים</h4><p>פיילוט 90 יום עם 100 משתמשים</p></div>
+      <div class="cta-box"><h4>מה אנחנו צריכים</h4><p>גישה ל-API בנקאי + לקוחות בטא</p></div>
+      <div class="cta-box"><h4>מסלול</h4><p>סנדבוקס בנק ישראל → White Label</p></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="prev()">←</button>
+  <div class="dot-nav" id="dots"></div>
+  <span class="counter" id="counter">1 / 7</span>
+  <button onclick="next()">→</button>
+</div>
+
+<script>
+let current = 1;
+const total = 7;
+
+function buildDots() {
+  const d = document.getElementById('dots');
+  for (let i = 1; i <= total; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 1 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    d.appendChild(dot);
+  }
+}
+
+function goTo(n) {
+  document.getElementById('slide-' + current).classList.remove('active');
+  document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+  current = Math.max(1, Math.min(total, n));
+  document.getElementById('slide-' + current).classList.add('active');
+  document.querySelectorAll('.dot')[current - 1].classList.add('active');
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+buildDots();
+</script>
+</body>
+</html>

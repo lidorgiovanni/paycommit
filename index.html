@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PayCommit — ניהול התחייבויות תשלום</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --bg: #f0f2f8;
+    --surface: #ffffff;
+    --surface2: #f5f7fc;
+    --surface3: #eaecf5;
+    --border: #dde1f0;
+    --border2: #c8cde3;
+    --accent: #6c63ff;
+    --accent-glow: rgba(108,99,255,0.1);
+    --accent2: #00c896;
+    --accent2-glow: rgba(0,200,150,0.1);
+    --danger: #ff4d6d;
+    --warn: #f59e0b;
+    --text: #1a1d2e;
+    --text2: #4a5070;
+    --muted: #8890b0;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(100,110,180,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; background-image: radial-gradient(ellipse at 20% 0%, rgba(108,99,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 80% 100%, rgba(0,200,150,0.04) 0%, transparent 60%); }
+
+  /* LAYOUT */
+  .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  .sidebar { background: var(--surface); border-left: 1px solid var(--border); padding: 32px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+  .sidebar .logo { font-size: 1.4rem; font-weight: 700; color: var(--accent); margin-bottom: 32px; padding: 0 12px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
+  .sidebar .logo span { color: var(--accent2); }
+  .sidebar .logo::before { content: '◈'; font-size: 1.2rem; }
+  .nav-section { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); padding: 16px 12px 6px; }
+  .nav-btn { background: none; border: none; color: var(--text2); padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; text-align: right; font-size: 0.88rem; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: all .2s; width: 100%; }
+  .nav-btn:hover { background: var(--surface2); color: var(--text); }
+  .nav-btn.active { background: var(--accent-glow); color: var(--accent); border-right: 2px solid var(--accent); font-weight: 600; }
+  .sidebar-footer { margin-top: auto; padding: 12px; border-top: 1px solid var(--border); font-size: 0.78rem; color: var(--muted); }
+
+  .main { padding: 40px; overflow-y: auto; }
+  .page { display: none; animation: fadeIn .25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HEADER */
+  .page-header { margin-bottom: 32px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .page-header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; }
+  .page-header p { color: var(--text2); margin-top: 5px; font-size: 0.88rem; }
+
+  /* CARDS */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 20px; transition: border-color .2s, transform .2s; cursor: default; }
+  .stat-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .stat-card .label { color: var(--muted); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .stat-card .value { font-size: 2rem; font-weight: 700; line-height: 1; }
+  .stat-card .trend { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+  .stat-card.accent { border-color: rgba(108,99,255,0.3); background: linear-gradient(135deg, var(--surface), rgba(108,99,255,0.04)); }
+  .stat-card.accent .value { color: var(--accent); }
+  .stat-card.green { border-color: rgba(0,229,176,0.2); }
+  .stat-card.green .value { color: var(--accent2); }
+  .stat-card.warn .value { color: var(--warn); }
+  .stat-card.danger .value { color: var(--danger); }
+
+  /* TABLE */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .table-toolbar { padding: 18px 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); flex-wrap: wrap; background: var(--surface2); }
+  .table-toolbar h2 { font-size: 0.95rem; font-weight: 600; flex: 1; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--surface2); color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; padding: 12px 18px; text-align: right; font-weight: 600; border-bottom: 1px solid var(--border); }
+  td { padding: 15px 18px; border-top: 1px solid var(--border); font-size: 0.87rem; vertical-align: middle; color: var(--text2); }
+  td strong { color: var(--text); }
+  tr:hover td { background: var(--surface2); }
+  .empty-row td { text-align: center; color: var(--muted); padding: 60px; font-size: 0.9rem; }
+
+  /* BADGE */
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px; }
+  .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.8; }
+  .badge.CREATED  { background: rgba(100,110,200,0.08); color: #5560a0; border: 1px solid rgba(100,110,200,0.2); }
+  .badge.SIGNED   { background: rgba(59,130,246,0.08); color: #2563eb; border: 1px solid rgba(59,130,246,0.2); }
+  .badge.SENT     { background: rgba(245,158,11,0.08); color: #d97706; border: 1px solid rgba(245,158,11,0.2); }
+  .badge.ACCEPTED { background: rgba(0,200,150,0.08); color: #059669; border: 1px solid rgba(0,200,150,0.2); }
+  .badge.REDEEMED { background: rgba(34,197,94,0.08); color: #16a34a; border: 1px solid rgba(34,197,94,0.2); }
+  .badge.CANCELED { background: rgba(100,100,100,0.08); color: #6b7280; border: 1px solid rgba(100,100,100,0.15); }
+  .badge.REJECTED { background: rgba(255,77,109,0.08); color: #dc2626; border: 1px solid rgba(255,77,109,0.2); }
+
+  /* BUTTONS */
+  .btn { padding: 9px 20px; border-radius: var(--radius-sm); border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all .2s; font-family: inherit; }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 0 20px rgba(124,111,255,0.3); }
+  .btn-primary:hover { background: #6a5ff0; box-shadow: 0 0 28px rgba(124,111,255,0.45); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-sm { padding: 5px 13px; font-size: 0.78rem; border-radius: 6px; border: 1px solid var(--border2); background: var(--surface3); color: var(--text2); cursor: pointer; transition: all .2s; font-family: inherit; font-weight: 500; }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .btn-sm.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(255,77,109,0.08); }
+
+  /* FORM */
+  .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; max-width: 580px; box-shadow: var(--shadow); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 0.78rem; color: var(--text2); font-weight: 500; letter-spacing: 0.3px; }
+  input, textarea, select { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 11px 14px; font-size: 0.9rem; outline: none; transition: border .2s, box-shadow .2s; width: 100%; font-family: inherit; }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  input::placeholder { color: var(--muted); }
+  .form-actions { margin-top: 24px; display: flex; gap: 10px; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 32px; width: 500px; max-width: 95vw; box-shadow: 0 24px 64px rgba(0,0,0,0.6); transform: translateY(10px); transition: transform .25s; }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal h2 { margin-bottom: 24px; font-size: 1.1rem; font-weight: 700; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 20px; }
+  .btn-ghost { background: none; border: 1px solid var(--border2); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--text); color: var(--text); background: var(--surface2); }
+
+  /* DETAIL */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .detail-item .key { font-size: 0.78rem; color: var(--muted); margin-bottom: 3px; }
+  .detail-item .val { font-size: 0.92rem; word-break: break-all; }
+  .sig-box { background: var(--surface2); border-radius: 8px; padding: 10px 12px; font-size: 0.72rem; color: var(--accent2); word-break: break-all; font-family: monospace; margin-bottom: 16px; }
+  .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* AUDIT */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .tl-content .tl-action { font-weight: 600; font-size: 0.9rem; }
+  .tl-content .tl-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  /* TOAST */
+  .toast-wrap { position: fixed; bottom: 28px; left: 28px; display: flex; flex-direction: column; gap: 10px; z-index: 200; }
+  .toast { background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 13px 20px; font-size: 0.85rem; animation: slideIn .3s cubic-bezier(.34,1.56,.64,1); max-width: 340px; box-shadow: var(--shadow); font-weight: 500; }
+  .toast.success { border-color: rgba(0,229,176,0.4); color: var(--accent2); }
+  .toast.error { border-color: rgba(255,77,109,0.4); color: var(--danger); }
+  @keyframes slideIn { from { transform: translateX(-20px) scale(0.95); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 16px; }
+    .mobile-nav { display: flex; }
+    .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .stat-card { padding: 14px 10px; }
+    .stat-card .value { font-size: 1.4rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-card { padding: 20px; }
+    table thead { display: none; }
+    table tr { display: block; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; padding: 12px; }
+    table td { display: flex; justify-content: space-between; padding: 6px 0; border: none; font-size: 0.82rem; }
+    table td::before { content: attr(data-label); color: var(--muted); font-size: 0.75rem; font-weight: 500; }
+    .table-toolbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .filter-row { flex-wrap: wrap; width: 100%; }
+    input.filter { width: 100%; }
+    .page-header { flex-direction: column; gap: 4px; }
+    .modal { padding: 20px; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .toast-wrap { left: 12px; right: 12px; bottom: 80px; }
+    .toast { max-width: 100%; }
+  }
+
+  /* MOBILE NAV BAR */
+  .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); z-index: 50; padding: 8px 0; justify-content: space-around; }
+  .mobile-nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 16px; cursor: pointer; color: var(--muted); font-size: 0.68rem; font-weight: 500; font-family: inherit; transition: color .2s; }
+  .mobile-nav-btn .icon { font-size: 1.3rem; }
+  .mobile-nav-btn.active { color: var(--accent); }
+
+  /* LOGIN SCREEN */
+  .login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 999; background-image: radial-gradient(ellipse at 30% 20%, rgba(108,99,255,0.07) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(0,200,150,0.05) 0%, transparent 60%); }
+  .login-box { width: 400px; max-width: 95vw; }
+  .login-logo { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 8px; letter-spacing: -0.5px; }
+  .login-logo span { color: var(--accent2); }
+  .login-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 40px; }
+  .login-card { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 36px; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+  .login-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+  .login-card p { color: var(--muted); font-size: 0.85rem; margin-bottom: 28px; }
+  .login-step { display: none; }
+  .login-step.active { display: block; }
+  .otp-inputs { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
+  .otp-inputs input { width: 48px; height: 56px; text-align: center; font-size: 1.4rem; font-weight: 700; padding: 0; border-radius: 10px; }
+  .login-hint { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 12px; }
+  .login-hint a { color: var(--accent); cursor: pointer; text-decoration: none; }
+  .dev-badge { background: rgba(255,179,71,0.1); border: 1px solid rgba(255,179,71,0.3); color: var(--warn); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; margin-bottom: 20px; display: none; }
+  .dev-badge.show { display: block; }
+  .dev-otp { font-size: 1.4rem; font-weight: 800; letter-spacing: 6px; color: var(--warn); text-align: center; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Pay<span>Commit</span></div>
+    <div class="login-sub">מערכת ניהול התחייבויות תשלום דיגיטליות</div>
+    <div class="login-card">
+      <h2>כניסה למערכת</h2>
+      <p>הזן את המייל שלך להתחברות מהירה</p>
+      <div class="form-group" style="margin-bottom:16px">
+        <label>כתובת מייל</label>
+        <input type="email" id="login-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter') quickLogin()" />
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:12px" onclick="quickLogin()">כניסה ←</button>
+      <button class="btn" style="width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text2)" onclick="guestLogin()">כניסה כאורח</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="main-app" style="display:none">
+  <!-- MOBILE NAV -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-btn active" onclick="showPage('dashboard',this,true)"><span class="icon">📊</span>דשבורד</button>
+    <button class="mobile-nav-btn" onclick="showPage('create',this,true)"><span class="icon">➕</span>חדש</button>
+    <button class="mobile-nav-btn" onclick="showPage('list',this,true)"><span class="icon">📋</span>רשימה</button>
+  </nav>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">Pay<span>Commit</span></div>
+    <div class="nav-section">ניווט</div>
+    <button class="nav-btn active" onclick="showPage('dashboard', this)">📊 דשבורד</button>
+    <button class="nav-btn" onclick="showPage('create', this)">➕ התחייבות חדשה</button>
+    <button class="nav-btn" onclick="showPage('list', this)">📋 כל ההתחייבויות</button>
+    <div class="sidebar-footer" id="sidebar-footer">PayCommit v1.0</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1>דשבורד</h1>
+        <p>סקירה כללית של כל ההתחייבויות</p>
+      </div>
+      <div class="stats" id="stats-row">
+        <div class="stat-card accent"><div class="label">סה"כ</div><div class="value" id="stat-total">—</div></div>
+        <div class="stat-card"><div class="label">נוצרו</div><div class="value" id="stat-created">—</div></div>
+        <div class="stat-card"><div class="label">נחתמו</div><div class="value" id="stat-signed">—</div></div>
+        <div class="stat-card warn"><div class="label">ממתינות</div><div class="value" id="stat-sent">—</div></div>
+        <div class="stat-card green"><div class="label">מומשו</div><div class="value" id="stat-redeemed">—</div></div>
+        <div class="stat-card danger"><div class="label">בוטלו</div><div class="value" id="stat-canceled">—</div></div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar"><h2>פעילות אחרונה</h2><button class="btn btn-primary" onclick="loadDashboard()">רענן</button></div>
+        <table>
+          <thead><tr><th>מזהה</th><th>סכום</th><th>יוצר</th><th>נמען</th><th>תאריך פירעון</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+          <tbody id="dashboard-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CREATE -->
+    <div class="page" id="page-create">
+      <div class="page-header">
+        <h1>התחייבות חדשה</h1>
+        <p>מלא את הפרטים ולחץ צור</p>
+      </div>
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>סכום (₪)</label>
+            <input type="number" id="f-amount" placeholder="1500" min="1" />
+          </div>
+          <div class="form-group">
+            <label>תאריך פירעון</label>
+            <input type="date" id="f-due" />
+          </div>
+          <div class="form-group">
+            <label>מזהה יוצר</label>
+            <input type="text" id="f-creator" placeholder="user_a" />
+          </div>
+          <div class="form-group">
+            <label>מזהה נמען</label>
+            <input type="text" id="f-recipient" placeholder="user_b" />
+          </div>
+          <div class="form-group full">
+            <label>תיאור (אופציונלי)</label>
+            <input type="text" id="f-desc" placeholder="שכר דירה אוגוסט" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="createCommitment()">➕ צור התחייבות</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="page" id="page-list">
+      <div class="page-header">
+        <h1>כל ההתחייבויות</h1>
+        <p>חפש, סנן ונהל</p>
+      </div>
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <h2>רשימה</h2>
+          <div class="filter-row">
+            <input class="filter" type="text" id="filter-user" placeholder="חפש לפי משתמש" />
+            <select class="filter" id="filter-status">
+              <option value="">כל הסטטוסים</option>
+              <option>CREATED</option><option>SIGNED</option><option>SENT</option>
+              <option>ACCEPTED</option><option>REDEEMED</option><option>CANCELED</option><option>REJECTED</option>
+            </select>
+            <button class="btn btn-primary" onclick="loadList()">חפש</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>מזהה</th><th>סכום</th><th>יוצר</th><th>נמען</th><th>תאריך פירעון</th><th>סטטוס</th><th>פעולות</th></tr></thead>
+          <tbody id="list-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal">
+    <h2>פרטי התחייבות</h2>
+    <div class="detail-grid" id="detail-grid"></div>
+    <div id="detail-sig"></div>
+    <div class="action-row" id="detail-actions"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-detail')">סגור</button>
+      <button class="btn btn-primary" onclick="loadAudit(currentId)">📜 היסטוריה</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT MODAL -->
+<div class="modal-overlay" id="modal-audit">
+  <div class="modal">
+    <h2>Audit Trail</h2>
+    <div class="timeline" id="audit-timeline"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-audit')">סגור</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+const API = 'http://localhost:8000';
+let currentId = null;
+
+// ── NAV ──────────────────────────────────────────────────────────────────────
+function showPage(name, btn, mobile = false) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn, .mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'list') loadList();
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || 'שגיאה');
+  return data;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const data = await api('GET', '/commitments');
+    const counts = {};
+    data.forEach(c => counts[c.status] = (counts[c.status] || 0) + 1);
+    document.getElementById('stat-total').textContent = data.length;
+    document.getElementById('stat-created').textContent = counts.CREATED || 0;
+    document.getElementById('stat-signed').textContent = counts.SIGNED || 0;
+    document.getElementById('stat-sent').textContent = (counts.SENT || 0) + (counts.ACCEPTED || 0);
+    document.getElementById('stat-redeemed').textContent = counts.REDEEMED || 0;
+    document.getElementById('stat-canceled').textContent = (counts.CANCELED || 0) + (counts.REJECTED || 0);
+    renderTable('dashboard-table', data.slice(-10).reverse());
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── LIST ──────────────────────────────────────────────────────────────────────
+async function loadList() {
+  try {
+    const user = document.getElementById('filter-user').value.trim();
+    const status = document.getElementById('filter-status').value;
+    let qs = [];
+    if (user) qs.push(`user_id=${encodeURIComponent(user)}`);
+    if (status) qs.push(`status=${status}`);
+    const data = await api('GET', '/commitments' + (qs.length ? '?' + qs.join('&') : ''));
+    renderTable('list-table', data);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────────────────────────
+function renderTable(tbodyId, rows) {
+  const tb = document.getElementById(tbodyId);
+  if (!rows.length) {
+    tb.innerHTML = '<tr class="empty-row"><td colspan="7">אין נתונים</td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(c => `
+    <tr>
+      <td data-label="מזהה" style="font-family:monospace;font-size:.75rem;color:var(--muted)">${c.id.slice(0,8)}…</td>
+      <td data-label="סכום"><strong>₪${c.amount.toLocaleString()}</strong></td>
+      <td data-label="יוצר">${c.creator_id}</td>
+      <td data-label="נמען">${c.recipient_id}</td>
+      <td data-label="פירעון">${c.due_date}</td>
+      <td data-label="סטטוס"><span class="badge ${c.status}">${c.status}</span></td>
+      <td data-label=""><button class="btn-sm" onclick="openDetail('${c.id}')">פרטים</button></td>
+    </tr>`).join('');
+}
+
+// ── CREATE ────────────────────────────────────────────────────────────────────
+async function createCommitment() {
+  const amount = parseFloat(document.getElementById('f-amount').value);
+  const due_date = document.getElementById('f-due').value;
+  const creator_id = document.getElementById('f-creator').value.trim();
+  const recipient_id = document.getElementById('f-recipient').value.trim();
+  const description = document.getElementById('f-desc').value.trim();
+  if (!amount || !due_date || !creator_id || !recipient_id) { toast('מלא את כל השדות החובה', 'error'); return; }
+  try {
+    const c = await api('POST', '/commitments', { amount, due_date, creator_id, recipient_id, description: description || null, currency: 'ILS' });
+    toast(`✅ התחייבות נוצרה: ${c.id.slice(0,8)}…`);
+    ['f-amount','f-due','f-creator','f-recipient','f-desc'].forEach(id => document.getElementById(id).value = '');
+    openDetail(c.id);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── DETAIL ────────────────────────────────────────────────────────────────────
+async function openDetail(id) {
+  currentId = id;
+  try {
+    const c = await api('GET', `/commitments/${id}`);
+    document.getElementById('detail-grid').innerHTML = [
+      ['מזהה', `<span style="font-family:monospace;font-size:.78rem">${c.id}</span>`],
+      ['סטטוס', `<span class="badge ${c.status}">${c.status}</span>`],
+      ['סכום', `₪${c.amount.toLocaleString()} ${c.currency}`],
+      ['תאריך פירעון', c.due_date],
+      ['יוצר', c.creator_id],
+      ['נמען', c.recipient_id],
+      ['תיאור', c.description || '—'],
+      ['עודכן', new Date(c.updated_at).toLocaleString('he-IL')],
+    ].map(([k,v]) => `<div class="detail-item"><div class="key">${k}</div><div class="val">${v}</div></div>`).join('');
+
+    document.getElementById('detail-sig').innerHTML = c.signature
+      ? `<div style="margin-bottom:12px"><div style="font-size:.78rem;color:var(--muted);margin-bottom:4px">חתימה דיגיטלית (SHA256)</div><div class="sig-box">${c.signature}</div></div>`
+      : '';
+
+    const actions = nextActions(c.status);
+    document.getElementById('detail-actions').innerHTML = actions.map(a =>
+      `<button class="btn-sm ${a.danger?'danger':''}" onclick="doAction('${id}','${a.action}','${c.creator_id}','${c.recipient_id}')">${a.label}</button>`
+    ).join('');
+
+    openModal('modal-detail');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function nextActions(status) {
+  const map = {
+    CREATED:  [{action:'sign',label:'✍️ חתום',creator:true},{action:'cancel',label:'❌ בטל',danger:true}],
+    SIGNED:   [{action:'send',label:'📤 שלח',creator:true},{action:'cancel',label:'❌ בטל',danger:true}],
+    SENT:     [{action:'accept',label:'✅ קבל',recipient:true},{action:'reject',label:'❌ דחה',danger:true}],
+    ACCEPTED: [{action:'redeem',label:'💰 מימש'},{action:'cancel',label:'❌ בטל',danger:true}],
+  };
+  return map[status] || [];
+}
+
+async function doAction(id, action, creatorId, recipientId) {
+  const actorMap = { sign: creatorId, send: creatorId, accept: recipientId, reject: recipientId, redeem: creatorId, cancel: creatorId };
+  const actor = actorMap[action];
+  try {
+    await api('POST', `/commitments/${id}/${action}?actor_id=${actor}`);
+    toast(`✅ פעולה בוצעה: ${action.toUpperCase()}`);
+    openDetail(id);
+    loadDashboard();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── AUDIT ─────────────────────────────────────────────────────────────────────
+async function loadAudit(id) {
+  try {
+    const logs = await api('GET', `/commitments/${id}/audit`);
+    document.getElementById('audit-timeline').innerHTML = logs.map(l => `
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-action">${l.action} ${l.from_status ? `${l.from_status} → ${l.to_status}` : `→ ${l.to_status}`}</div>
+          <div class="tl-meta">על ידי ${l.actor_id} · ${new Date(l.timestamp).toLocaleString('he-IL')}</div>
+        </div>
+      </div>`).join('') || '<div style="color:var(--muted);padding:20px">אין רשומות</div>';
+    closeModal('modal-detail');
+    openModal('modal-audit');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+let currentUser = null;
+
+function quickLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email) { toast('הזן כתובת מייל', 'error'); return; }
+  currentUser = { email, id: email };
+  enterApp(email);
+}
+
+function guestLogin() {
+  currentUser = { email: 'guest', id: 'guest' };
+  enterApp('אורח');
+}
+
+function enterApp(label) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'grid';
+  document.getElementById('sidebar-footer').textContent = label;
+  loadDashboard();
+  toast(`ברוך הבא! 👋`);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+// לא קוראים loadDashboard בהתחלה — רק אחרי login
+</script>
+</body>
+</html>
