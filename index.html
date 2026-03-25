@@ -142,7 +142,7 @@
   @media (max-width: 768px) {
     .app { grid-template-columns: 1fr; }
     .sidebar { display: none; }
-    .main { padding: 16px; }
+    .main { padding: 16px; padding-bottom: 80px; }
     .mobile-nav { display: flex; }
     .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .stat-card { padding: 14px 10px; }
@@ -532,6 +532,7 @@ function guestLogin() {
 function enterApp(label) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('main-app').style.display = 'grid';
+  document.getElementById('mobile-nav').style.display = 'flex';
   document.getElementById('sidebar-footer').textContent = label;
   loadDashboard();
   toast(`ברוך הבא! 👋`);
