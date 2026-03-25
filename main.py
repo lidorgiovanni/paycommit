@@ -1,9 +1,11 @@
 import uuid
 import os
+from pathlib import Path
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from database import init_db, get_db
 from models import (
@@ -27,6 +29,14 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 @app.on_event("startup")
 def startup():
     init_db()
+
+@app.get("/", response_class=HTMLResponse)
+def serve_ui():
+    return FileResponse("index.html")
+
+@app.get("/pitch", response_class=HTMLResponse)
+def serve_pitch():
+    return FileResponse("pitch.html")
 
 
 def _row_to_dict(row) -> dict:
