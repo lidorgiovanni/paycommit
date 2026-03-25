@@ -195,6 +195,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .btn-hist{padding:8px 16px;border-radius:var(--r-sm);border:none;background:var(--c2);color:var(--text2);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
 .btn-hist:hover{color:var(--text)}
 
+.doc-qr{background:var(--c2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.doc-qr-label{font-size:0.65rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;align-self:flex-start}
+.doc-qr-url{font-size:0.62rem;color:var(--text2);font-family:monospace;word-break:break-all;text-align:center}
+#qr-canvas{border-radius:8px}
+
 /* ── TIMELINE ── */
 .tl{display:flex;flex-direction:column}
 .tli{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -354,6 +359,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 <div class="toasts" id="toasts"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const API='';
 let currentId=null,allData=[];
@@ -509,9 +515,21 @@ async function openDetail(id){
         <div class="doc-field"><div class="doc-field-label">עודכן</div><div class="doc-field-val">${new Date(c.updated_at).toLocaleDateString('he-IL')}</div></div>
       </div>
       ${c.signature?`<div class="doc-sig"><div class="doc-sig-label">🔐 חתימה דיגיטלית מאומתת — SHA256</div><div class="doc-sig-val">${c.signature}</div></div>`:''}
+      <div class="doc-qr">
+        <div class="doc-qr-label">📱 סריקת QR לאימות</div>
+        <div id="qr-${c.id}"></div>
+        <div class="doc-qr-url">${window.location.origin}/verify/${c.id}</div>
+      </div>
       ${acts.length?`<div class="doc-actions">${acts.map(a=>`<button class="act ${a.d?'d':'p'}" onclick="doAct('${id}','${a.k}','${c.creator_id}','${c.recipient_id}')">${a.l}</button>`).join('')}</div>`:''}
     `;
     openMo('mo-detail');
+    // QR
+    setTimeout(()=>{
+      const qrEl=document.getElementById(`qr-${c.id}`);
+      if(qrEl&&!qrEl.innerHTML){
+        new QRCode(qrEl,{text:`${window.location.origin}/verify/${c.id}`,width:120,height:120,colorDark:'#eef0ff',colorLight:'#111628'});
+      }
+    },100);
   }catch(e){toast(e.message,'e')}
 }
 
@@ -556,14 +574,46 @@ function quickLogin(){
   enterApp(email);
 }
 function guestLogin(){enterApp('Guest')}
-function enterApp(label){
+async function enterApp(label){
   document.getElementById('ls').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('mnav').style.display='flex';
   document.getElementById('s-uname').textContent=label;
   document.getElementById('s-av').textContent=label[0].toUpperCase();
+  await seedDemoData();
   loadHome();
   toast('ברוך הבא 👋');
+}
+
+// ── DEMO DATA ──
+const DEMO=[
+  {amount:4500,due_date:'2025-08-01',creator_id:'ישראל ישראלי',recipient_id:'דוד כהן',description:'שכר דירה — אוגוסט 2025',status:'ACCEPTED'},
+  {amount:12000,due_date:'2025-09-15',creator_id:'ABC בע"מ',recipient_id:'XYZ סאפליירס',description:'תשלום ספק — פרויקט Q3',status:'SIGNED'},
+  {amount:2800,due_date:'2025-07-30',creator_id:'מיכל לוי',recipient_id:'רון אברהם',description:'הלוואה אישית',status:'SENT'},
+  {amount:35000,due_date:'2025-10-01',creator_id:'סטארטאפ טק',recipient_id:'משקיע פרטי',description:'השקעה ראשונית — Seed Round',status:'REDEEMED'},
+  {amount:1500,due_date:'2025-08-20',creator_id:'נועה שמיר',recipient_id:'גל ברק',description:'שיעורים פרטיים — חודש',status:'CREATED'},
+];
+
+async function seedDemoData(){
+  try{
+    const existing=await req('GET','/commitments');
+    if(existing.length>0)return;
+    for(const d of DEMO){
+      const c=await req('POST','/commitments',{...d,currency:'ILS'});
+      if(['SIGNED','SENT','ACCEPTED','REDEEMED'].includes(d.status)){
+        await req('POST',`/commitments/${c.id}/sign?actor_id=${encodeURIComponent(d.creator_id)}`);
+      }
+      if(['SENT','ACCEPTED','REDEEMED'].includes(d.status)){
+        await req('POST',`/commitments/${c.id}/send?actor_id=${encodeURIComponent(d.creator_id)}`);
+      }
+      if(['ACCEPTED','REDEEMED'].includes(d.status)){
+        await req('POST',`/commitments/${c.id}/accept?actor_id=${encodeURIComponent(d.recipient_id)}`);
+      }
+      if(d.status==='REDEEMED'){
+        await req('POST',`/commitments/${c.id}/redeem?actor_id=${encodeURIComponent(d.creator_id)}`);
+      }
+    }
+  }catch(e){console.log('demo seed:',e.message)}
 }
 </script>
 </body>
