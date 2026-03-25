@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from database import init_db, get_db
 from models import (
@@ -19,7 +20,7 @@ SMTP_CONFIG = {
 }
 DEV_MODE = not SMTP_CONFIG["user"]  # אם אין SMTP — מצב פיתוח, OTP מוצג בתגובה
 
-app = FastAPI(title="Payment Commitments API")
+app = FastAPI(title="Payment Commitments API", default_response_class=JSONResponse)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], allow_credentials=True)
 
 
