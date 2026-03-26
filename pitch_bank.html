@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PayCommit — Banking Pitch</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080f;
+  --s1:#0c0f1e;
+  --s2:#111628;
+  --border:#1e2540;
+  --accent:#7c6fff;
+  --green:#00d4a0;
+  --gold:#f5c842;
+  --text:#f0f2ff;
+  --muted:#6b7299;
+  --text2:#a8b0d0;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,8,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05)}
+.nav-logo{font-size:1.1rem;font-weight:800;color:var(--accent);letter-spacing:0.5px}
+.nav-logo span{color:var(--gold)}
+.nav-dots{display:flex;gap:8px}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .3s}
+.nav-dot.active{background:var(--gold);transform:scale(1.3)}
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px 60px 60px;position:relative;overflow:hidden}
+.slide-num{position:absolute;top:80px;left:48px;font-size:0.7rem;color:var(--muted);letter-spacing:3px;font-weight:600}
+.glow-purple{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,111,255,0.08) 0%,transparent 70%);pointer-events:none}
+.glow-gold{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,0.06) 0%,transparent 70%);pointer-events:none}
+.tag{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,0.08);color:#f5c842;border:1px solid rgba(245,200,66,0.2);border-radius:100px;padding:6px 16px;font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px}
+h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;line-height:1.05;letter-spacing:-2px}
+h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+p{color:var(--text2);line-height:1.7;font-size:0.95rem}
+.accent{color:var(--accent)}
+.gold{color:var(--gold)}
+.green{color:var(--green)}
+.divider{width:48px;height:3px;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:2px;margin:24px auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:960px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%;max-width:960px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:28px;transition:border-color .3s,transform .3s}
+.card:hover{border-color:rgba(245,200,66,0.3);transform:translateY(-3px)}
+.card.glow{border-color:rgba(245,200,66,0.15);background:linear-gradient(135deg,var(--s1),rgba(245,200,66,0.03))}
+.card-icon{font-size:2rem;margin-bottom:16px;display:block}
+.hero{text-align:center;background:radial-gradient(ellipse at 50% -20%,rgba(245,200,66,0.1) 0%,transparent 60%)}
+.hero h1{margin-bottom:24px}
+.hero-sub{font-size:1.1rem;color:var(--text2);max-width:580px;margin:0 auto 48px;line-height:1.7}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:0.82rem;color:var(--text2);margin-bottom:32px}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+/* FLOW */
+.flow{display:flex;align-items:flex-start;justify-content:center;gap:0;flex-wrap:wrap;width:100%;max-width:1000px;margin:40px 0}
+.flow-item{display:flex;align-items:center;gap:0}
+.flow-step{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;text-align:center;min-width:120px;transition:all .3s;position:relative}
+.flow-step:hover{border-color:var(--gold);background:rgba(245,200,66,0.05)}
+.flow-step .icon{font-size:1.6rem;display:block;margin-bottom:6px}
+.flow-step .label{font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:0.5px;display:block}
+.flow-step .sub{font-size:0.65rem;color:var(--muted);margin-top:4px;display:block}
+.flow-step.bank{border-color:rgba(0,212,160,0.3);background:rgba(0,212,160,0.05)}
+.flow-step.bank .label{color:var(--green)}
+.arrow{color:var(--border);font-size:1.4rem;padding:0 4px;flex-shrink:0;margin-top:24px}
+/* KEY CONCEPT BOX */
+.key-box{background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(0,212,160,0.05));border:1px solid rgba(245,200,66,0.25);border-radius:20px;padding:32px 40px;text-align:center;max-width:700px;margin:32px 0}
+.key-box h3{font-size:1.3rem;margin-bottom:12px;color:var(--gold)}
+/* STAT */
+.stat-num{font-size:3.5rem;font-weight:900;letter-spacing:-2px;line-height:1}
+.stat-num.gold{color:var(--gold)}
+.stat-num.teal{color:var(--green)}
+/* CTA */
+.cta-slide{background:radial-gradient(ellipse at 50% 100%,rgba(245,200,66,0.07) 0%,transparent 60%);text-align:center}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+.btn-main{background:var(--gold);color:#06080f;border:none;padding:14px 32px;border-radius:12px;font-size:0.9rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .3s;box-shadow:0 0 30px rgba(245,200,66,0.2)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(245,200,66,0.4)}
+.btn-outline{background:none;color:var(--text);border:1px solid var(--border);padding:14px 32px;border-radius:12px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .slide{padding:80px 24px 40px}
+  .slide-num{left:24px}
+  h1{font-size:2.2rem;letter-spacing:-1px}
+  h2{font-size:1.6rem}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .flow{gap:8px}
+  .flow-item{flex-direction:column}
+  .arrow{transform:rotate(90deg);margin-top:0}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Pay<span>Commit</span> <span style="color:var(--muted);font-weight:400;font-size:0.8rem">· Banking Edition</span></div>
+  <div class="nav-dots" id="nav-dots"></div>
+</nav>
+
+<div id="deck"></div>
+
+<script>
+const slides = [
+
+`<div class="slide hero" id="s0">
+  <div class="glow-purple" style="top:-200px;right:-100px"></div>
+  <div class="slide-num">01 — 08</div>
+  <div class="hero-badge">Confidential · Banking Edition · 2026</div>
+  <div class="tag">🏦 PayCommit for Banks</div>
+  <h1>Digital Payment<br/><span class="gold">Commitment Platform</span></h1>
+  <div class="divider"></div>
+  <p class="hero-sub">שכבת ניהול התחייבויות תשלום דיגיטליות — מעל התשתית הבנקאית הקיימת, ללא שינוי בתשתית, ללא סיכון רגולטורי</p>
+  <p style="font-size:0.8rem;color:var(--muted);margin-top:16px">Lidor Giovanni · March 2026</p>
+</div>`,
+
+`<div class="slide" id="s1">
+  <div class="glow-gold" style="top:50%;left:-200px;transform:translateY(-50%)"></div>
+  <div class="slide-num">02 — 08</div>
+  <div class="tag">⚠️ הבעיה</div>
+  <h2 style="text-align:center">הבנק רואה <span class="gold">תשלומים</span><br/>אבל לא רואה <span class="accent">התחייבויות</span></h2>
+  <div class="grid-3" style="margin-top:48px">
+    <div class="card">
+      <span class="card-icon">📄</span>
+      <h3>צ'קים נייר</h3>
+      <p>עדיין 8M+ בשנה בישראל — אין מעקב, אין דיגיטציה, עלות תפעולית גבוהה</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔍</span>
+      <h3>אפס ויזיביליות</h3>
+      <p>הבנק לא יודע על התחייבויות עתידיות של הלקוח עד שהכסף זז — מאוחר מדי</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📱</span>
+      <h3>פער דיגיטלי</h3>
+      <p>ביט / העברות = מיידי בלבד. אין כלי דיגיטלי לתשלום עתידי מחייב</p>
+    </div>
+  </div>
+</div>`,
+
+`<div class="slide" id="s2">
+  <div class="glow-gold" style="bottom:-100px;right:-100px"></div>
+  <div class="slide-num">03 — 08</div>
+  <div class="tag">💡 הרעיון המרכזי</div>
+  <h2 style="text-align:center">המערכת <span class="gold">לא מזיזה כסף</span></h2>
+  <div class="key-box">
+    <h3>👉 PayCommit מנהל התחייבויות — הבנק מבצע תשלומים</h3>
+    <p style="margin-top:12px;font-size:1rem">שתי שכבות נפרדות לחלוטין. PayCommit יושב <strong style="color:var(--text)">מעל</strong> המערכת הבנקאית הקיימת — ללא שינוי בתשתית, ללא נגיעה בפיקדונות, ללא סיכון רגולטורי</p>
+  </div>
+  <div class="grid-2" style="max-width:700px;margin-top:8px">
+    <div class="card glow" style="text-align:center">
+      <span class="card-icon">🏦</span>
+      <h3>הבנק</h3>
+      <p>מזיז כסף · מחזיק פיקדונות · מבצע העברות</p>
+    </div>
+    <div class="card glow" style="text-align:center">
+      <span class="card-icon">📋</span>
+      <h3>PayCommit</h3>
+      <p>מנהל התחייבויות · מאמת זהויות · מתעד הכל</p>
+    </div>
+  </div>
+</div>`,
+
+`<div class="slide" id="s3">
+  <div class="glow-purple" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="slide-num">04 — 08</div>
+  <div class="tag">⚙️ איך זה עובד</div>
+  <h2 style="text-align:center;margin-bottom:8px">ה-Flow <span class="gold">מנקודת מבט הבנק</span></h2>
+  <p style="text-align:center;margin-bottom:0;font-size:0.9rem">כל שלב מתועד, מאומת, ובלתי הפיך</p>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-step">
+        <span class="icon">✍️</span>
+        <span class="label">לקוח יוצר</span>
+        <span class="sub">התחייבות</span>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-step">
+        <span class="icon">🔐</span>
+        <span class="label">אימות זהות</span>
+        <span class="sub">OTP / חתימה</span>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-step">
+        <span class="icon">📤</span>
+        <span class="label">שליחה לנמען</span>
+        <span class="sub">דיגיטלית</span>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-step">
+        <span class="icon">✅</span>
+        <span class="label">נמען מאשר</span>
+        <span class="sub">Multi-party</span>
+      </div>
+      <span class="arrow">→</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-step bank">
+        <span class="icon">🏦</span>
+        <span class="label">הבנק מבצע</span>
+        <span class="sub">תשלום בפועל</span>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.85rem;color:var(--muted);text-align:center">הבנק מעורב רק בשלב האחרון — כל השאר מנוהל על ידי PayCommit</p>
+</div>`,
+
+`<div class="slide" id="s4">
+  <div class="glow-gold" style="top:0;left:-100px"></div>
+  <div class="slide-num">05 — 08</div>
+  <div class="tag">💰 ערך לבנק</div>
+  <h2 style="text-align:center;margin-bottom:40px">4 הזדמנויות <span class="gold">מיידיות</span></h2>
+  <div class="grid-2">
+    <div class="card glow">
+      <span class="card-icon">📊</span>
+      <h3>ויזיביליות עתידית</h3>
+      <p>הבנק רואה התחייבויות <strong style="color:var(--text)">לפני</strong> שהכסף זז — תחזית תזרים, ניהול סיכונים, הצעות אשראי מדויקות</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">💳</span>
+      <h3>הזדמנות אשראי חדשה</h3>
+      <p>התחייבות חתומה = בטוחה. הבנק יכול להציע מימון מראש (Factoring) על בסיס ההתחייבות</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">⚖️</span>
+      <h3>ציות רגולטורי מובנה</h3>
+      <p>Audit trail מלא, חתימה דיגיטלית, תיעוד כל פעולה — KYC / AML ready</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">📱</span>
+      <h3>שימור לקוחות צעירים</h3>
+      <p>חלופה דיגיטלית מודרנית לצ'ק — מונעת נטישה לפינטק מתחרים</p>
+    </div>
+  </div>
+</div>`,
+
+`<div class="slide" id="s5">
+  <div class="glow-purple" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="slide-num">06 — 08</div>
+  <div class="tag">🔌 אינטגרציה</div>
+  <h2 style="text-align:center;margin-bottom:40px">אפס שינוי <span class="gold">בתשתית</span></h2>
+  <div class="grid-3">
+    <div class="card glow" style="text-align:center">
+      <span class="card-icon">🔗</span>
+      <h3>API בלבד</h3>
+      <p>חיבור דרך REST API סטנדרטי — שבועות, לא חודשים</p>
+    </div>
+    <div class="card glow" style="text-align:center">
+      <span class="card-icon">🏗️</span>
+      <h3>מעל הקיים</h3>
+      <p>לא נוגע ב-Core Banking, לא מחליף שום מערכת קיימת</p>
+    </div>
+    <div class="card glow" style="text-align:center">
+      <span class="card-icon">🏷️</span>
+      <h3>White Label</h3>
+      <p>המוצר מופיע תחת מותג הבנק — חוויה אחידה ללקוח</p>
+    </div>
+  </div>
+  <div class="key-box" style="margin-top:32px">
+    <h3 style="font-size:1rem">✔ תואם Open Banking &nbsp;·&nbsp; ✔ מוכן לסנדבוקס בנק ישראל &nbsp;·&nbsp; ✔ KYC / AML ready</h3>
+  </div>
+</div>`,
+
+`<div class="slide" id="s6">
+  <div class="glow-gold" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="slide-num">07 — 08</div>
+  <div class="tag">📈 הזדמנות</div>
+  <h2 style="text-align:center;margin-bottom:56px">גודל <span class="gold">השוק</span></h2>
+  <div class="grid-3" style="margin-bottom:40px">
+    <div class="card" style="text-align:center">
+      <div class="stat-num gold">8M+</div>
+      <p style="margin-top:12px;font-size:0.85rem">צ'קים בשנה<br/>בישראל בלבד</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="stat-num teal">$4.6B</div>
+      <p style="margin-top:12px;font-size:0.85rem">שוק B2B Payments<br/>בישראל</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="stat-num gold">Low</div>
+      <p style="margin-top:12px;font-size:0.85rem">סיכון לבנק<br/>High Value</p>
+    </div>
+  </div>
+  <p style="font-size:1rem;text-align:center">כל צ'ק שמוחלף = <span class="gold">עסקה שניתן לנהל, לעקוב, ולממן</span></p>
+</div>`,
+
+`<div class="slide cta-slide" id="s7">
+  <div class="glow-gold" style="bottom:-100px;left:50%;transform:translateX(-50%)"></div>
+  <div class="slide-num">08 — 08</div>
+  <div class="tag">🚀 הצעד הבא</div>
+  <h1>Low Risk.<br/><span class="gold">High Value.</span><br/>Ready Now.</h1>
+  <div class="divider"></div>
+  <p style="font-size:1rem;margin-top:8px;max-width:500px;text-align:center">MVP עובד · API מוכן · מוכן לפיילוט בנקאי · תואם רגולציה</p>
+  <div class="cta-btns">
+    <button class="btn-main" onclick="window.open('https://iridescent-sunshine-150a48.netlify.app','_blank')">🔗 צפה ב-Demo</button>
+    <button class="btn-outline">📧 נקבע פגישה</button>
+  </div>
+</div>`
+
+];
+
+document.getElementById('deck').innerHTML = slides.join('');
+
+const dotsEl = document.getElementById('nav-dots');
+slides.forEach((_,i)=>{
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i===0?' active':'');
+  d.onclick = ()=>document.getElementById('s'+i).scrollIntoView({behavior:'smooth'});
+  dotsEl.appendChild(d);
+});
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const i = e.target.id.replace('s','');
+      document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j==i));
+    }
+  });
+},{threshold:0.5});
+slides.forEach((_,i)=>observer.observe(document.getElementById('s'+i)));
+</script>
+</body>
+</html>

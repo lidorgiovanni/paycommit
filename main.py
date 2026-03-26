@@ -38,6 +38,10 @@ def serve_ui():
 def serve_pitch():
     return FileResponse("pitch.html")
 
+@app.get("/pitch/bank", response_class=HTMLResponse)
+def serve_pitch_bank():
+    return FileResponse("pitch_bank.html")
+
 
 def _row_to_dict(row) -> dict:
     return dict(row)
