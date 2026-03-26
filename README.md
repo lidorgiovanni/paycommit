@@ -17,8 +17,8 @@ Swagger UI: http://localhost:8000/docs
 
 ```
 CREATED → SIGNED → SENT → ACCEPTED → REDEEMED
-                              ↓
-                           REJECTED
+                    ↓          ↓
+                 REJECTED   CANCELED
 CREATED/SIGNED/ACCEPTED → CANCELED
 ```
 
