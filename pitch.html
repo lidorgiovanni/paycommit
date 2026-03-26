@@ -140,7 +140,7 @@ const slides = [
 
 `<div class="slide hero" id="s0">
   <div class="glow-purple" style="top:-200px;right:-100px"></div>
-  <div class="slide-num">01 — 08</div>
+  <div class="slide-num">01 — 09</div>
   <div class="hero-badge">MVP מוכן · API פעיל · מוכן לפיילוט</div>
   <div class="tag">💡 PayCommit</div>
   <h1>ההתחייבות הפיננסית<br/><span class="accent">של המאה ה-21</span></h1>
@@ -150,7 +150,7 @@ const slides = [
 
 `<div class="slide" id="s1">
   <div class="glow-purple" style="top:50%;left:-200px;transform:translateY(-50%)"></div>
-  <div class="slide-num">02 — 08</div>
+  <div class="slide-num">02 — 09</div>
   <div class="tag">⚠️ הבעיה</div>
   <h2 style="text-align:center">הצ'ק עדיין קיים ב-2025<br/><span class="accent">כי אין תחליף טוב</span></h2>
   <div class="grid-3" style="margin-top:48px">
@@ -175,7 +175,7 @@ const slides = [
 
 `<div class="slide" id="s2">
   <div class="glow-green" style="bottom:-100px;right:-100px"></div>
-  <div class="slide-num">03 — 08</div>
+  <div class="slide-num">03 — 09</div>
   <div class="tag">✅ הפתרון</div>
   <h2 style="text-align:center">PayCommit — <span class="green">צ'ק חכם</span></h2>
   <p style="text-align:center;margin-bottom:8px">התחייבות תשלום דיגיטלית עם lifecycle מלא</p>
@@ -193,7 +193,37 @@ const slides = [
 </div>`,
 
 `<div class="slide" id="s3">
-  <div class="slide-num">04 — 08</div>
+  <div class="glow-purple" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="slide-num">04 — 09</div>
+  <div class="tag">🔐 חדשנות טכנית</div>
+  <h2 style="text-align:center;margin-bottom:40px">מה שאף אחד אחר <span class="accent">לא עושה</span></h2>
+  <div class="grid-2" style="max-width:860px">
+    <div class="card glow">
+      <span class="card-icon">⛓️</span>
+      <h3>Hash Chain — שרשרת בלתי ניתנת לשינוי</h3>
+      <p style="font-family:monospace;font-size:0.82rem;color:var(--accent);margin-bottom:8px">H1 = Hash(CREATED)<br/>H2 = Hash(H1 + SIGNED)<br/>H3 = Hash(H2 + ACCEPTED)</p>
+      <p>כל מעבר סטטוס מייצר hash חדש שמכיל את כל ההיסטוריה — שינוי אחורה = שבירת השרשרת</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">👥</span>
+      <h3>Multi-Party Validation</h3>
+      <p>יוצר חותם · נמען מאשר · צד שלישי אופציונלי — כל צד מאמת בנפרד, ההתחייבות תקפה רק כשכולם אישרו</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">🔀</span>
+      <h3>הפרדה מוחלטת מהתשלום</h3>
+      <p>PayCommit מנהל את ההתחייבות — הבנק מבצע את התשלום. שתי שכבות נפרדות, גמישות רגולטורית מלאה</p>
+    </div>
+    <div class="card glow">
+      <span class="card-icon">🔒</span>
+      <h3>State Machine מאובטח</h3>
+      <p>מעברי סטטוס חד-כיווניים ובלתי הפיכים. לא ניתן לדלג שלב, לא ניתן לחזור אחורה</p>
+    </div>
+  </div>
+</div>`,
+
+`<div class="slide" id="s4">
+  <div class="slide-num">05 — 09</div>
   <div class="tag">🔍 השוואה</div>
   <h2 style="text-align:center;margin-bottom:40px">PayCommit מול <span class="accent">הקיים</span></h2>
   <div class="compare-table">
@@ -210,9 +240,9 @@ const slides = [
   </div>
 </div>`,
 
-`<div class="slide" id="s4">
+`<div class="slide" id="s5">
   <div class="glow-purple" style="top:0;right:-100px"></div>
-  <div class="slide-num">05 — 08</div>
+  <div class="slide-num">06 — 09</div>
   <div class="tag">🏦 לבנקים</div>
   <h2 style="text-align:center;margin-bottom:40px">למה זה <span class="accent">מושלם לבנק</span></h2>
   <div class="grid-2">
@@ -239,9 +269,9 @@ const slides = [
   </div>
 </div>`,
 
-`<div class="slide" id="s5">
+`<div class="slide" id="s6">
   <div class="glow-green" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>
-  <div class="slide-num">06 — 08</div>
+  <div class="slide-num">07 — 09</div>
   <div class="tag">📈 שוק</div>
   <h2 style="text-align:center;margin-bottom:56px">גודל <span class="green">ההזדמנות</span></h2>
   <div class="grid-3" style="margin-bottom:40px">
@@ -261,8 +291,8 @@ const slides = [
   <p style="font-size:1rem;text-align:center">כל צ'ק שמוחלף ב-PayCommit = <span class="accent">עסקה שניתן לנהל, לעקוב, ולממן</span></p>
 </div>`,
 
-`<div class="slide" id="s6">
-  <div class="slide-num">07 — 08</div>
+`<div class="slide" id="s7">
+  <div class="slide-num">08 — 09</div>
   <div class="tag">🗺️ רודמאפ</div>
   <h2 style="text-align:center;margin-bottom:48px">3 שלבים ל<span class="accent">שוק</span></h2>
   <div class="roadmap">
@@ -293,9 +323,9 @@ const slides = [
   </div>
 </div>`,
 
-`<div class="slide cta-slide" id="s7">
+`<div class="slide cta-slide" id="s8">
   <div class="glow-green" style="bottom:-100px;left:50%;transform:translateX(-50%)"></div>
-  <div class="slide-num">08 — 08</div>
+  <div class="slide-num">09 — 09</div>
   <div class="tag">🚀 הצעד הבא</div>
   <h1>בואו נבנה את<br/><span class="green">עתיד ההתחייבויות</span><br/>ביחד</h1>
   <div class="divider"></div>
