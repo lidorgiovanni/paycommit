@@ -2,619 +2,228 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>PayCommit — DPC</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PayCommit — Digital Payment Commitment</title>
+<meta name="description" content="התחייבות תשלום דיגיטלית — חכמה, מאובטחת, ומשולבת עם כל מערכת בנקאית קיימת"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#06080f;
-  --c1:#0c1020;
-  --c2:#111628;
-  --c3:#161d30;
-  --border:#1c2438;
-  --border2:#263050;
-  --accent:#5b6ef5;
-  --accent2:#7c6fff;
+  --s1:#0c0f1e;
+  --s2:#111628;
+  --border:#1e2540;
+  --accent:#7c6fff;
   --green:#00d4a0;
-  --danger:#ff4d6d;
-  --warn:#f59e0b;
-  --text:#eef0ff;
-  --text2:#6b7899;
-  --muted:#1e2640;
-  --r:18px;
-  --r-sm:10px;
+  --text:#f0f2ff;
+  --muted:#6b7299;
+  --text2:#a8b0d0;
 }
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
 
-/* ── LOGIN ── */
-.login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:var(--bg);background-image:radial-gradient(ellipse at 50% -10%,rgba(91,110,245,0.2) 0%,transparent 60%)}
-.login-inner{width:340px;max-width:92vw;text-align:center}
-.brand{font-size:2.4rem;font-weight:900;letter-spacing:-1.5px;margin-bottom:6px}
-.brand .b1{color:var(--accent)}
-.brand .b2{color:var(--green)}
-.brand-sub{font-size:0.82rem;color:var(--text2);margin-bottom:40px;line-height:1.6}
-.lcard{background:var(--c1);border:1px solid var(--border);border-radius:var(--r);padding:24px;text-align:right}
-.lcard h3{font-size:0.88rem;font-weight:700;margin-bottom:14px;color:var(--text)}
-.linp{width:100%;background:var(--c2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);padding:11px 13px;font-size:0.88rem;outline:none;font-family:inherit;transition:border .2s;margin-bottom:10px}
-.linp:focus{border-color:var(--accent)}
-.linp::placeholder{color:var(--text2)}
-.lbtn{width:100%;padding:12px;border-radius:var(--r-sm);border:none;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:8px}
-.lbtn.primary{background:var(--accent);color:#fff;box-shadow:0 4px 20px rgba(91,110,245,0.3)}
-.lbtn.primary:hover{background:#4a5de0;transform:translateY(-1px)}
-.lbtn.ghost{background:none;border:1px solid var(--border2);color:var(--text2)}
-.lbtn.ghost:hover{border-color:var(--accent2);color:var(--text)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,8,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05)}
+.nav-logo{font-size:1.1rem;font-weight:800;color:var(--accent)}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;gap:8px}
+.nav-btn{padding:8px 20px;border-radius:10px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none}
+.nav-btn.ghost{background:none;border:1px solid var(--border);color:var(--text2)}
+.nav-btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.nav-btn.primary{background:var(--accent);border:none;color:#fff;box-shadow:0 0 20px rgba(124,111,255,0.3)}
+.nav-btn.primary:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(124,111,255,0.5)}
 
-/* ── APP SHELL ── */
-.app{display:flex;height:100vh;overflow:hidden}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% -10%,rgba(124,111,255,0.15) 0%,transparent 60%)}
+.glow{position:absolute;border-radius:50%;pointer-events:none}
+.glow-1{width:700px;height:700px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(124,111,255,0.07) 0%,transparent 70%)}
+.glow-2{width:500px;height:500px;bottom:-100px;left:-100px;background:radial-gradient(circle,rgba(0,212,160,0.05) 0%,transparent 70%)}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:100px;padding:8px 20px;font-size:0.8rem;color:var(--text2);margin-bottom:32px}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+.tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,111,255,0.1);color:#9d94ff;border:1px solid rgba(124,111,255,0.2);border-radius:100px;padding:6px 16px;font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px}
+h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:24px}
+.accent{color:var(--accent)}
+.green{color:var(--green)}
+.hero-sub{font-size:1.1rem;color:var(--text2);max-width:560px;margin:0 auto 48px;line-height:1.7}
+.divider{width:48px;height:3px;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;margin:0 auto 48px}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+.btn-main{background:var(--accent);color:#fff;border:none;padding:16px 36px;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .3s;box-shadow:0 0 30px rgba(124,111,255,0.3);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(124,111,255,0.5)}
+.btn-outline{background:none;color:var(--text);border:1px solid var(--border);padding:16px 36px;border-radius:14px;font-size:0.95rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 
-/* ── SIDEBAR ── */
-.sidebar{width:220px;background:var(--c1);border-left:1px solid var(--border);display:flex;flex-direction:column;padding:20px 10px;flex-shrink:0}
-.s-brand{font-size:1.05rem;font-weight:900;letter-spacing:-0.5px;padding:4px 10px;margin-bottom:28px}
-.s-brand .b1{color:var(--accent)}
-.s-brand .b2{color:var(--green)}
-.s-nav{display:flex;flex-direction:column;gap:2px}
-.s-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r-sm);border:none;background:none;color:var(--text2);font-size:0.83rem;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;text-align:right}
-.s-item:hover{background:var(--c2);color:var(--text)}
-.s-item.active{background:rgba(91,110,245,0.15);color:var(--accent);font-weight:600}
-.s-item .ic{font-size:0.95rem;width:18px;text-align:center}
-.s-foot{margin-top:auto;padding:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.s-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;flex-shrink:0}
-.s-uname{font-size:0.75rem;color:var(--text2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* FLOW */
+.flow-section{padding:80px 40px;text-align:center}
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,160,0.08);color:var(--green);border:1px solid rgba(0,212,160,0.2);border-radius:100px;padding:6px 16px;font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.section-sub{color:var(--text2);font-size:0.95rem;margin-bottom:48px}
+.flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;max-width:900px;margin:0 auto 48px}
+.flow-item{display:flex;align-items:center}
+.flow-step{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:center;min-width:120px;transition:all .3s}
+.flow-step:hover{border-color:var(--accent);background:rgba(124,111,255,0.08);transform:translateY(-3px)}
+.flow-step .icon{font-size:1.8rem;display:block;margin-bottom:8px}
+.flow-step .label{font-size:0.75rem;font-weight:700;color:var(--muted);letter-spacing:0.5px}
+.flow-step.final{border-color:rgba(0,212,160,0.3);background:rgba(0,212,160,0.05)}
+.flow-step.final .label{color:var(--green)}
+.arrow{color:var(--border);font-size:1.6rem;padding:0 8px;flex-shrink:0}
 
-/* ── MAIN ── */
-.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;background:var(--bg)}
-.topbar{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
-.topbar-left h1{font-size:1.25rem;font-weight:800;letter-spacing:-0.5px}
-.topbar-left p{font-size:0.75rem;color:var(--text2);margin-top:2px}
-.btn-new{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#fff;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
-.btn-new:hover{background:#4a5de0;transform:translateY(-1px)}
-.content{padding:20px 24px 32px;flex:1}
-.page{display:none;animation:fu .2s ease}
-.page.active{display:block}
-@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* FEATURES */
+.features{padding:80px 40px;max-width:1100px;margin:0 auto}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:32px;transition:all .3s}
+.card:hover{border-color:rgba(124,111,255,0.3);transform:translateY(-4px)}
+.card.glow{border-color:rgba(124,111,255,0.2);background:linear-gradient(135deg,var(--s1),rgba(124,111,255,0.04))}
+.card-icon{font-size:2.2rem;margin-bottom:18px;display:block}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:10px}
+.card p{color:var(--text2);font-size:0.88rem;line-height:1.7}
 
-/* ── HERO STATS ── */
-.hero{background:linear-gradient(135deg,#0f1628 0%,#0c1020 100%);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;margin-bottom:20px;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(91,110,245,0.12),transparent 70%);pointer-events:none}
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.hero-label{font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px}
-.hero-amount{font-size:2.4rem;font-weight:900;letter-spacing:-2px;line-height:1}
-.hero-amount .cur{font-size:1.2rem;font-weight:600;color:var(--text2);margin-left:2px}
-.hero-pills{display:flex;gap:8px;flex-wrap:wrap}
-.pill{display:flex;align-items:center;gap:6px;background:var(--c2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:0.72rem;font-weight:600}
-.pill .dot{width:6px;height:6px;border-radius:50%}
+/* STATS */
+.stats{padding:80px 40px;text-align:center;background:linear-gradient(180deg,transparent,rgba(124,111,255,0.04),transparent)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:800px;margin:48px auto 0}
+.stat-num{font-size:3.5rem;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--accent)}
+.stat-num.teal{color:var(--green)}
+.stat-label{font-size:0.85rem;color:var(--text2);margin-top:8px}
 
-/* ── FILTER TABS ── */
-.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text2);font-size:0.73rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.tab:hover{border-color:var(--border2);color:var(--text)}
-.tab.active{background:rgba(91,110,245,0.15);border-color:var(--accent);color:var(--accent)}
+/* CTA SECTION */
+.cta-section{padding:100px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,212,160,0.08) 0%,transparent 70%);pointer-events:none}
 
-/* ── DPC CARD ── */
-.dpc-list{display:flex;flex-direction:column;gap:10px}
-.dpc{background:var(--c1);border:1px solid var(--border);border-radius:var(--r);padding:0;cursor:pointer;transition:all .2s;overflow:hidden;position:relative}
-.dpc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
-.dpc-stripe{height:3px;width:100%}
-.dpc-stripe.CREATED{background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.dpc-stripe.SIGNED{background:linear-gradient(90deg,#60a5fa,var(--accent))}
-.dpc-stripe.SENT{background:linear-gradient(90deg,var(--warn),#f97316)}
-.dpc-stripe.ACCEPTED{background:linear-gradient(90deg,var(--green),#00b4d8)}
-.dpc-stripe.REDEEMED{background:linear-gradient(90deg,#4ade80,var(--green))}
-.dpc-stripe.CANCELED,.dpc-stripe.REJECTED{background:var(--muted)}
-.dpc-body{padding:16px 18px}
-.dpc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
-.dpc-amount{font-size:1.6rem;font-weight:900;letter-spacing:-1px;line-height:1}
-.dpc-amount .dpc-cur{font-size:0.9rem;font-weight:600;color:var(--text2)}
-.dpc-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:0.65rem;font-weight:700;letter-spacing:0.3px}
-.dpc-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.8}
-.dpc-badge.CREATED{background:rgba(91,110,245,0.15);color:#8b9bff;border:1px solid rgba(91,110,245,0.25)}
-.dpc-badge.SIGNED{background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.25)}
-.dpc-badge.SENT{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25)}
-.dpc-badge.ACCEPTED{background:rgba(0,212,160,0.15);color:#00d4a0;border:1px solid rgba(0,212,160,0.25)}
-.dpc-badge.REDEEMED{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.25)}
-.dpc-badge.CANCELED{background:rgba(30,38,64,0.5);color:var(--text2);border:1px solid var(--border)}
-.dpc-badge.REJECTED{background:rgba(255,77,109,0.15);color:#ff4d6d;border:1px solid rgba(255,77,109,0.25)}
-.dpc-parties{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.dpc-party{background:var(--c2);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:0.78rem;font-weight:600;color:var(--text)}
-.dpc-arrow{color:var(--text2);font-size:0.75rem}
-.dpc-progress{margin-bottom:8px}
-.dpc-steps{display:flex;align-items:center;margin-bottom:4px}
-.dpc-step{display:flex;align-items:center;flex:1}
-.dpc-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
-.dpc-dot.on{background:var(--accent);box-shadow:0 0 6px rgba(91,110,245,0.6)}
-.dpc-dot.on.green{background:var(--green);box-shadow:0 0 6px rgba(0,212,160,0.6)}
-.dpc-line{flex:1;height:2px;background:var(--muted);transition:all .3s;margin:0 2px}
-.dpc-line.on{background:var(--accent)}
-.dpc-line.on.green{background:var(--green)}
-.dpc-step-labels{display:flex;justify-content:space-between;font-size:0.58rem;color:var(--text2);font-weight:500}
-.dpc-meta{display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.dpc-desc{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
-.dpc-date{display:flex;align-items:center;gap:4px;font-weight:500}
-.dpc-signed{position:absolute;bottom:14px;left:16px;display:flex;align-items:center;gap:4px;font-size:0.65rem;color:var(--green);font-weight:600;opacity:0.8}
-
-/* ── EMPTY ── */
-.empty{text-align:center;padding:60px 20px}
-.empty-icon{font-size:3rem;margin-bottom:14px;opacity:0.3}
-.empty h3{font-size:0.95rem;font-weight:600;color:var(--text2);margin-bottom:6px}
-.empty p{font-size:0.8rem;color:var(--text2);opacity:0.6}
-
-/* ── CREATE FORM ── */
-.form-wrap{max-width:500px}
-.fcard{background:var(--c1);border:1px solid var(--border);border-radius:var(--r);padding:24px}
-.fcard-title{font-size:0.95rem;font-weight:700;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fg.full{grid-column:1/-1}
-.fg label{font-size:0.68rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.8px}
-.fg input,.fg select{background:var(--c2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);padding:10px 12px;font-size:0.85rem;outline:none;transition:all .2s;width:100%;font-family:inherit}
-.fg input:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,110,245,0.12)}
-.fg input::placeholder{color:var(--text2)}
-.factions{margin-top:16px;display:flex;gap:8px}
-.btn-create{display:flex;align-items:center;gap:6px;padding:11px 20px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#fff;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 16px rgba(91,110,245,0.25)}
-.btn-create:hover{background:#4a5de0;transform:translateY(-1px)}
-
-/* ── MODAL (bottom sheet on mobile) ── */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
-.mo.open{opacity:1;pointer-events:all}
-@media(min-width:769px){.mo{align-items:center}}
-.modal{background:var(--c1);border:1px solid var(--border2);border-radius:var(--r) var(--r) 0 0;padding:24px;width:100%;max-width:500px;transform:translateY(30px);transition:transform .3s cubic-bezier(.34,1.1,.64,1);max-height:92vh;overflow-y:auto}
-@media(min-width:769px){.modal{border-radius:var(--r);max-width:480px}}
-.mo.open .modal{transform:translateY(0)}
-.handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
-@media(min-width:769px){.handle{display:none}}
-
-/* ── DPC DOCUMENT VIEW ── */
-.doc-header{margin-bottom:18px}
-.doc-id{font-size:0.65rem;color:var(--text2);font-family:monospace;margin-bottom:4px}
-.doc-amount{font-size:2.8rem;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px}
-.doc-amount .cur{font-size:1.2rem;font-weight:600;color:var(--text2)}
-.doc-status{margin-bottom:16px}
-.doc-parties{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:12px 14px;background:var(--c2);border-radius:var(--r-sm);border:1px solid var(--border)}
-.doc-party{flex:1}
-.doc-party-label{font-size:0.62rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
-.doc-party-name{font-size:0.88rem;font-weight:700}
-.doc-divider{color:var(--text2);font-size:1.2rem;padding:0 4px}
-.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.doc-field{background:var(--c2);border-radius:var(--r-sm);padding:10px 12px}
-.doc-field-label{font-size:0.62rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
-.doc-field-val{font-size:0.83rem;font-weight:600;word-break:break-all}
-.doc-sig{background:rgba(0,212,160,0.05);border:1px solid rgba(0,212,160,0.2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:14px}
-.doc-sig-label{display:flex;align-items:center;gap:6px;font-size:0.65rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
-.doc-sig-val{font-size:0.62rem;color:var(--text2);font-family:monospace;word-break:break-all;line-height:1.6}
-.doc-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-.act{padding:10px 16px;border-radius:var(--r-sm);border:none;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
-.act.p{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(91,110,245,0.3)}
-.act.p:hover{background:#4a5de0}
-.act.d{background:rgba(255,77,109,0.1);color:var(--danger);border:1px solid rgba(255,77,109,0.25)}
-.act.d:hover{background:rgba(255,77,109,0.2)}
-.modal-footer{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;border-top:1px solid var(--border);padding-top:14px}
-.btn-close{padding:8px 16px;border-radius:var(--r-sm);border:1px solid var(--border2);background:none;color:var(--text2);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
-.btn-close:hover{border-color:var(--accent2);color:var(--text)}
-.btn-hist{padding:8px 16px;border-radius:var(--r-sm);border:none;background:var(--c2);color:var(--text2);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
-.btn-hist:hover{color:var(--text)}
-
-.doc-qr{background:var(--c2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
-.doc-qr-label{font-size:0.65rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;align-self:flex-start}
-.doc-qr-url{font-size:0.62rem;color:var(--text2);font-family:monospace;word-break:break-all;text-align:center}
-#qr-canvas{border-radius:8px}
-
-/* ── TIMELINE ── */
-.tl{display:flex;flex-direction:column}
-.tli{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
-.tld{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;box-shadow:0 0 6px rgba(91,110,245,0.5)}
-.tla{font-weight:600;font-size:0.8rem}
-.tlm{font-size:0.7rem;color:var(--text2);margin-top:2px}
-
-/* ── TOAST ── */
-.toasts{position:fixed;bottom:24px;left:24px;display:flex;flex-direction:column;gap:8px;z-index:300}
-.toast{background:var(--c1);border:1px solid var(--border);border-radius:12px;padding:11px 16px;font-size:0.8rem;font-weight:500;animation:si .3s cubic-bezier(.34,1.56,.64,1);max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
-.toast.s{border-color:rgba(0,212,160,0.35);color:var(--green)}
-.toast.e{border-color:rgba(255,77,109,0.35);color:var(--danger)}
-@keyframes si{from{transform:translateX(-14px) scale(.95);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
-
-/* ── MOBILE NAV ── */
-.mnav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--c1);border-top:1px solid var(--border);z-index:50;padding:8px 0 14px;justify-content:space-around}
-.mnb{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 20px;cursor:pointer;color:var(--text2);font-size:0.62rem;font-weight:500;font-family:inherit;transition:color .15s}
-.mnb .mi{font-size:1.3rem}
-.mnb.active{color:var(--accent)}
+/* FOOTER */
+footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-size:1rem;font-weight:800;color:var(--accent)}
+.footer-logo span{color:var(--green)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{color:var(--muted);font-size:0.82rem;text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{color:var(--muted);font-size:0.78rem}
 
 @media(max-width:768px){
-  .sidebar{display:none}
-  .main{padding-bottom:70px}
-  .content{padding:14px}
-  .topbar{padding:14px 14px 0}
-  .mnav{display:flex}
-  .hero-amount{font-size:1.8rem}
-  .fgrid{grid-template-columns:1fr}
-  .toasts{left:10px;right:10px;bottom:74px}
-  .toast{max-width:100%}
-  .doc-grid{grid-template-columns:1fr}
+  nav{padding:14px 20px}
+  .nav-links .nav-btn.ghost{display:none}
+  .hero{padding:100px 24px 60px}
+  h1{letter-spacing:-1px}
+  .hero-btns{flex-direction:column;align-items:center}
+  .flow-section,.features,.stats,.cta-section{padding:60px 24px}
+  .grid-3{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr;gap:24px}
+  .flow{gap:8px}
+  .flow-item{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+  footer{flex-direction:column;text-align:center;padding:24px}
+  .footer-links{justify-content:center}
 }
 </style>
 </head>
 <body>
 
-<div class="login" id="ls">
-  <div class="login-inner">
-    <div class="brand"><span class="b1">Pay</span><span class="b2">Commit</span></div>
-    <div class="brand-sub">Digital Payment Commitment<br/>התחייבות תשלום דיגיטלית מחייבת</div>
-    <div class="lcard">
-      <h3>כניסה למערכת</h3>
-      <input class="linp" type="email" id="lemail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')quickLogin()"/>
-      <button class="lbtn primary" onclick="quickLogin()">כניסה ←</button>
-      <button class="lbtn ghost" onclick="guestLogin()">כניסה כאורח</button>
-    </div>
+<nav>
+  <div class="nav-logo">Pay<span>Commit</span></div>
+  <div class="nav-links">
+    <a class="nav-btn ghost" href="/pitch">Pitch Deck</a>
+    <a class="nav-btn primary" href="/pitch/bank">🏦 Banking Edition</a>
   </div>
-</div>
+</nav>
 
-<div class="app" id="app" style="display:none">
-  <aside class="sidebar">
-    <div class="s-brand"><span class="b1">Pay</span><span class="b2">Commit</span></div>
-    <div class="s-nav">
-      <button class="s-item active" onclick="nav('home',this)"><span class="ic">◈</span>הבית</button>
-      <button class="s-item" onclick="nav('create',this)"><span class="ic">✚</span>DPC חדש</button>
-      <button class="s-item" onclick="nav('all',this)"><span class="ic">☰</span>כל ה-DPC</button>
-    </div>
-    <div class="s-foot">
-      <div class="s-av" id="s-av">?</div>
-      <div class="s-uname" id="s-uname">PayCommit</div>
-    </div>
-  </aside>
-
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-left">
-        <h1 id="pg-title">הבית</h1>
-        <p id="pg-sub">Digital Payment Commitments</p>
-      </div>
-      <button class="btn-new" onclick="nav('create',null)">✚ DPC חדש</button>
-    </div>
-    <div class="content">
-
-      <div class="page active" id="page-home">
-        <div class="hero">
-          <div class="hero-top">
-            <div>
-              <div class="hero-label">סכום כולל פעיל</div>
-              <div class="hero-amount"><span class="cur">₪</span><span id="h-amt">0</span></div>
-            </div>
-          </div>
-          <div class="hero-pills">
-            <div class="pill"><div class="dot" style="background:var(--accent)"></div><span id="h-total">0</span> סה"כ</div>
-            <div class="pill"><div class="dot" style="background:var(--warn)"></div><span id="h-pending">0</span> ממתינות</div>
-            <div class="pill"><div class="dot" style="background:var(--green)"></div><span id="h-done">0</span> מומשו</div>
-            <div class="pill"><div class="dot" style="background:var(--text2)"></div><span id="h-canceled">0</span> בוטלו</div>
-          </div>
-        </div>
-        <div class="tabs">
-          <button class="tab active" onclick="filterHome('all',this)">הכל</button>
-          <button class="tab" onclick="filterHome('active',this)">פעילות</button>
-          <button class="tab" onclick="filterHome('REDEEMED',this)">מומשו ✓</button>
-          <button class="tab" onclick="filterHome('CANCELED',this)">בוטלו</button>
-        </div>
-        <div class="dpc-list" id="home-list"></div>
-      </div>
-
-      <div class="page" id="page-create">
-        <div class="form-wrap">
-          <div class="fcard">
-            <div class="fcard-title">✚ DPC חדש — Digital Payment Commitment</div>
-            <div class="fgrid">
-              <div class="fg"><label>סכום (₪)</label><input type="number" id="f-amount" placeholder="5,000"/></div>
-              <div class="fg"><label>תאריך פירעון</label><input type="date" id="f-due"/></div>
-              <div class="fg"><label>שולח (Payer)</label><input type="text" id="f-creator" placeholder="user_a"/></div>
-              <div class="fg"><label>מקבל (Payee)</label><input type="text" id="f-recipient" placeholder="user_b"/></div>
-              <div class="fg full"><label>תיאור</label><input type="text" id="f-desc" placeholder="שכר דירה — ינואר 2026"/></div>
-            </div>
-            <div class="factions">
-              <button class="btn-create" onclick="createDPC()">✚ צור DPC</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="page" id="page-all">
-        <div class="tabs">
-          <button class="tab active" onclick="filterAll('all',this)">הכל</button>
-          <button class="tab" onclick="filterAll('CREATED',this)">Created</button>
-          <button class="tab" onclick="filterAll('SIGNED',this)">Signed</button>
-          <button class="tab" onclick="filterAll('SENT',this)">Sent</button>
-          <button class="tab" onclick="filterAll('ACCEPTED',this)">Accepted</button>
-          <button class="tab" onclick="filterAll('REDEEMED',this)">Redeemed</button>
-        </div>
-        <div class="dpc-list" id="all-list"></div>
-      </div>
-
-    </div>
+<section class="hero">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="badge">MVP מוכן · API פעיל · מוכן לפיילוט</div>
+  <div class="tag">💡 PayCommit</div>
+  <h1>ההתחייבות הפיננסית<br/><span class="accent">של המאה ה-21</span></h1>
+  <div class="divider"></div>
+  <p class="hero-sub">שכבת ניהול התחייבויות תשלום דיגיטליות — חכמה, מאובטחת, ומשולבת עם כל מערכת בנקאית קיימת</p>
+  <div class="hero-btns">
+    <a class="btn-main" href="/pitch">📊 צפה ב-Pitch Deck</a>
+    <a class="btn-outline" href="/pitch/bank">🏦 Banking Edition</a>
   </div>
 
-  <nav class="mnav" id="mnav">
-    <button class="mnb active" onclick="nav('home',this,true)"><span class="mi">◈</span>הבית</button>
-    <button class="mnb" onclick="nav('create',this,true)"><span class="mi">✚</span>חדש</button>
-    <button class="mnb" onclick="nav('all',this,true)"><span class="mi">☰</span>הכל</button>
-  </nav>
-</div>
+  <div class="flow">
+    <div class="flow-item"><div class="flow-step"><span class="icon">✍️</span><span class="label">יצירה</span></div><span class="arrow">→</span></div>
+    <div class="flow-item"><div class="flow-step"><span class="icon">🔐</span><span class="label">חתימה</span></div><span class="arrow">→</span></div>
+    <div class="flow-item"><div class="flow-step"><span class="icon">📤</span><span class="label">שליחה</span></div><span class="arrow">→</span></div>
+    <div class="flow-item"><div class="flow-step"><span class="icon">✅</span><span class="label">קבלה</span></div><span class="arrow">→</span></div>
+    <div class="flow-item"><div class="flow-step final"><span class="icon">💰</span><span class="label">מימוש</span></div></div>
+  </div>
+</section>
 
-<div class="mo" id="mo-detail">
-  <div class="modal">
-    <div class="handle"></div>
-    <div id="doc-view"></div>
-    <div class="modal-footer">
-      <button class="btn-close" onclick="closeMo('mo-detail')">סגור</button>
-      <button class="btn-hist" onclick="loadAudit(currentId)">📜 Audit Trail</button>
+<section class="flow-section">
+  <div class="section-tag">🔐 טכנולוגיה</div>
+  <h2>מה שאף אחד אחר <span class="accent">לא עושה</span></h2>
+  <p class="section-sub">הקומבינציה שאף אחד לא פטנט</p>
+  <div class="features" style="padding:0">
+    <div class="grid-3">
+      <div class="card glow">
+        <span class="card-icon">⛓️</span>
+        <h3>Hash Chain</h3>
+        <p>כל מעבר סטטוס מייצר hash חדש שמכיל את כל ההיסטוריה — שינוי אחורה = שבירת השרשרת</p>
+      </div>
+      <div class="card glow">
+        <span class="card-icon">🔒</span>
+        <h3>State Machine מאובטח</h3>
+        <p>מעברי סטטוס חד-כיווניים ובלתי הפיכים — לא ניתן לדלג שלב, לא ניתן לחזור אחורה</p>
+      </div>
+      <div class="card glow">
+        <span class="card-icon">👥</span>
+        <h3>Multi-Party Validation</h3>
+        <p>יוצר חותם · נמען מאשר · צד שלישי אופציונלי — כל צד מאמת בנפרד</p>
+      </div>
+      <div class="card glow">
+        <span class="card-icon">🔀</span>
+        <h3>הפרדה מהתשלום</h3>
+        <p>PayCommit מנהל התחייבויות — הבנק מבצע תשלומים. שתי שכבות נפרדות לחלוטין</p>
+      </div>
+      <div class="card glow">
+        <span class="card-icon">📜</span>
+        <h3>Audit Trail מלא</h3>
+        <p>כל פעולה נשמרת — מי עשה, מתי, ומאיזה סטטוס. מוכן לרגולציה</p>
+      </div>
+      <div class="card glow">
+        <span class="card-icon">🔐</span>
+        <h3>חתימה דיגיטלית</h3>
+        <p>SHA256 על כל ההתחייבות — בלתי ניתנת לשינוי לאחר החתימה</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="mo" id="mo-audit">
-  <div class="modal">
-    <div class="handle"></div>
-    <h2 style="margin-bottom:16px;font-size:0.95rem">📜 Audit Trail</h2>
-    <div class="tl" id="audit-tl"></div>
-    <div class="modal-footer"><button class="btn-close" onclick="closeMo('mo-audit')">סגור</button></div>
-  </div>
-</div>
-
-<div class="toasts" id="toasts"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-const API='';
-let currentId=null,allData=[];
-const STEPS=['CREATED','SIGNED','SENT','ACCEPTED','REDEEMED'];
-
-function nav(name,btn,mobile=false){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.s-item,.mnb').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(btn)btn.classList.add('active');
-  const T={home:['הבית','Digital Payment Commitments'],create:['DPC חדש','צור התחייבות תשלום דיגיטלית'],all:['כל ה-DPC','ניהול וחיפוש']};
-  const t=T[name]||['',''];
-  document.getElementById('pg-title').textContent=t[0];
-  document.getElementById('pg-sub').textContent=t[1];
-  if(name==='home')loadHome();
-  if(name==='all')loadAll();
-}
-
-async function req(method,path,body){
-  const opts={method,headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'true'}};
-  if(body)opts.body=JSON.stringify(body);
-  const res=await fetch(API+path,opts);
-  const data=await res.json();
-  if(!res.ok)throw new Error(data.detail||'שגיאה');
-  return data;
-}
-
-function toast(msg,t='s'){
-  const el=document.createElement('div');
-  el.className=`toast ${t}`;el.textContent=msg;
-  document.getElementById('toasts').appendChild(el);
-  setTimeout(()=>el.remove(),3500);
-}
-
-async function loadHome(){
-  try{
-    allData=await req('GET','/commitments');
-    const active=allData.filter(c=>!['CANCELED','REJECTED','REDEEMED'].includes(c.status));
-    document.getElementById('h-amt').textContent=active.reduce((s,c)=>s+c.amount,0).toLocaleString();
-    document.getElementById('h-total').textContent=allData.length;
-    document.getElementById('h-pending').textContent=allData.filter(c=>['SENT','ACCEPTED'].includes(c.status)).length;
-    document.getElementById('h-done').textContent=allData.filter(c=>c.status==='REDEEMED').length;
-    document.getElementById('h-canceled').textContent=allData.filter(c=>['CANCELED','REJECTED'].includes(c.status)).length;
-    renderList('home-list',allData.slice().reverse(),'all');
-  }catch(e){toast(e.message,'e')}
-}
-
-async function loadAll(){
-  try{
-    allData=await req('GET','/commitments');
-    renderList('all-list',allData.slice().reverse(),'all');
-  }catch(e){toast(e.message,'e')}
-}
-
-function filterHome(f,btn){
-  document.querySelectorAll('#page-home .tab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderList('home-list',allData.slice().reverse(),f);
-}
-
-function filterAll(f,btn){
-  document.querySelectorAll('#page-all .tab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderList('all-list',allData.slice().reverse(),f);
-}
-
-function renderList(id,data,filter){
-  const el=document.getElementById(id);
-  let rows=data;
-  if(filter==='active')rows=data.filter(c=>!['CANCELED','REJECTED','REDEEMED'].includes(c.status));
-  else if(filter!=='all')rows=data.filter(c=>c.status===filter);
-  if(!rows.length){
-    el.innerHTML='<div class="empty"><div class="empty-icon">📄</div><h3>אין DPC</h3><p>לחץ על "DPC חדש" כדי ליצור</p></div>';
-    return;
-  }
-  el.innerHTML=rows.map(c=>dpcCard(c)).join('');
-}
-
-function dpcCard(c){
-  const si=STEPS.indexOf(c.status);
-  const done=si>=0;
-  const steps=STEPS.map((s,i)=>{
-    const on=done&&i<=si;
-    const isGreen=c.status==='REDEEMED';
-    const last=i===STEPS.length-1;
-    return`<div class="dpc-step">
-      <div class="dpc-dot ${on?'on':''}${on&&isGreen?' green':''}"></div>
-      ${!last?`<div class="dpc-line ${on&&i<si?'on':''}${on&&i<si&&isGreen?' green':''}"></div>`:''}
-    </div>`;
-  }).join('');
-  const labels=['Created','Signed','Sent','Accepted','Redeemed'];
-  const signed=c.signature?`<div class="dpc-signed">🔐 חתום</div>`:'';
-  return`<div class="dpc" onclick="openDetail('${c.id}')">
-    <div class="dpc-stripe ${c.status}"></div>
-    <div class="dpc-body">
-      <div class="dpc-top">
-        <div class="dpc-amount"><span class="dpc-cur">₪</span>${c.amount.toLocaleString()}</div>
-        <span class="dpc-badge ${c.status}">${c.status}</span>
-      </div>
-      <div class="dpc-parties">
-        <span class="dpc-party">${c.creator_id}</span>
-        <span class="dpc-arrow">←</span>
-        <span class="dpc-party">${c.recipient_id}</span>
-      </div>
-      <div class="dpc-progress">
-        <div class="dpc-steps">${steps}</div>
-        <div class="dpc-step-labels">${labels.map(l=>`<span>${l}</span>`).join('')}</div>
-      </div>
-      <div class="dpc-meta">
-        <span class="dpc-desc">${c.description||'ללא תיאור'}</span>
-        <span class="dpc-date">📅 ${c.due_date}</span>
-      </div>
+<section class="stats">
+  <div class="section-tag">📈 שוק</div>
+  <h2>גודל <span class="green">ההזדמנות</span></h2>
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num">8M+</div>
+      <div class="stat-label">צ'קים בשנה בישראל בלבד</div>
     </div>
-    ${signed}
-  </div>`;
-}
+    <div>
+      <div class="stat-num teal">$4.6B</div>
+      <div class="stat-label">שוק B2B Payments בישראל</div>
+    </div>
+    <div>
+      <div class="stat-num">5</div>
+      <div class="stat-label">בנקים גדולים שמחפשים פתרון דיגיטלי</div>
+    </div>
+  </div>
+</section>
 
-async function createDPC(){
-  const amount=parseFloat(document.getElementById('f-amount').value);
-  const due_date=document.getElementById('f-due').value;
-  const creator_id=document.getElementById('f-creator').value.trim();
-  const recipient_id=document.getElementById('f-recipient').value.trim();
-  const description=document.getElementById('f-desc').value.trim();
-  if(!amount||!due_date||!creator_id||!recipient_id){toast('מלא את כל השדות','e');return}
-  try{
-    const c=await req('POST','/commitments',{amount,due_date,creator_id,recipient_id,description:description||null,currency:'ILS'});
-    toast('✅ DPC נוצר בהצלחה');
-    ['f-amount','f-due','f-creator','f-recipient','f-desc'].forEach(i=>document.getElementById(i).value='');
-    openDetail(c.id);
-  }catch(e){toast(e.message,'e')}
-}
+<section class="cta-section">
+  <div class="tag">🚀 הצעד הבא</div>
+  <h2>בואו נבנה את<br/><span class="green">עתיד ההתחייבויות</span> ביחד</h2>
+  <div class="divider" style="margin:24px auto 40px"></div>
+  <div class="hero-btns">
+    <a class="btn-main" href="/pitch">📊 Pitch Deck מלא</a>
+    <a class="btn-outline" href="/pitch/bank">🏦 Banking Edition</a>
+  </div>
+</section>
 
-async function openDetail(id){
-  currentId=id;
-  try{
-    const c=await req('GET',`/commitments/${id}`);
-    const acts=getActs(c.status);
-    document.getElementById('doc-view').innerHTML=`
-      <div class="doc-header">
-        <div class="doc-id">DPC · ${c.id}</div>
-        <div class="doc-amount"><span class="cur">₪</span>${c.amount.toLocaleString()}</div>
-        <div class="doc-status"><span class="dpc-badge ${c.status}">${c.status}</span></div>
-      </div>
-      <div class="doc-parties">
-        <div class="doc-party"><div class="doc-party-label">Payer — שולח</div><div class="doc-party-name">${c.creator_id}</div></div>
-        <div class="doc-divider">←</div>
-        <div class="doc-party"><div class="doc-party-label">Payee — מקבל</div><div class="doc-party-name">${c.recipient_id}</div></div>
-      </div>
-      <div class="doc-grid">
-        <div class="doc-field"><div class="doc-field-label">תאריך פירעון</div><div class="doc-field-val">${c.due_date}</div></div>
-        <div class="doc-field"><div class="doc-field-label">מטבע</div><div class="doc-field-val">${c.currency}</div></div>
-        <div class="doc-field"><div class="doc-field-label">תיאור</div><div class="doc-field-val">${c.description||'—'}</div></div>
-        <div class="doc-field"><div class="doc-field-label">עודכן</div><div class="doc-field-val">${new Date(c.updated_at).toLocaleDateString('he-IL')}</div></div>
-      </div>
-      ${c.signature?`<div class="doc-sig"><div class="doc-sig-label">🔐 חתימה דיגיטלית מאומתת — SHA256</div><div class="doc-sig-val">${c.signature}</div></div>`:''}
-      <div class="doc-qr">
-        <div class="doc-qr-label">📱 סריקת QR לאימות</div>
-        <div id="qr-${c.id}"></div>
-        <div class="doc-qr-url">${window.location.origin}/verify/${c.id}</div>
-      </div>
-      ${acts.length?`<div class="doc-actions">${acts.map(a=>`<button class="act ${a.d?'d':'p'}" onclick="doAct('${id}','${a.k}','${c.creator_id}','${c.recipient_id}')">${a.l}</button>`).join('')}</div>`:''}
-    `;
-    openMo('mo-detail');
-    // QR
-    setTimeout(()=>{
-      const qrEl=document.getElementById(`qr-${c.id}`);
-      if(qrEl&&!qrEl.innerHTML){
-        new QRCode(qrEl,{text:`${window.location.origin}/verify/${c.id}`,width:120,height:120,colorDark:'#eef0ff',colorLight:'#111628'});
-      }
-    },100);
-  }catch(e){toast(e.message,'e')}
-}
+<footer>
+  <div class="footer-logo">Pay<span>Commit</span></div>
+  <div class="footer-links">
+    <a href="/pitch">Pitch</a>
+    <a href="/pitch/bank">Banking</a>
+  </div>
+  <div class="footer-copy">© 2026 Lidor Giovanni · PayCommit</div>
+</footer>
 
-function getActs(s){
-  return({
-    CREATED:[{k:'sign',l:'✍️ חתום'},{k:'cancel',l:'בטל',d:true}],
-    SIGNED:[{k:'send',l:'📤 שלח'},{k:'cancel',l:'בטל',d:true}],
-    SENT:[{k:'accept',l:'✅ קבל'},{k:'reject',l:'דחה',d:true}],
-    ACCEPTED:[{k:'redeem',l:'💰 מימש'},{k:'cancel',l:'בטל',d:true}],
-  }[s]||[]);
-}
-
-async function doAct(id,action,cid,rid){
-  const actor={sign:cid,send:cid,accept:rid,reject:rid,redeem:cid,cancel:cid}[action];
-  try{
-    await req('POST',`/commitments/${id}/${action}?actor_id=${actor}`);
-    toast(`✅ ${action.toUpperCase()} בוצע`);
-    closeMo('mo-detail');
-    loadHome();
-  }catch(e){toast(e.message,'e')}
-}
-
-async function loadAudit(id){
-  try{
-    const logs=await req('GET',`/commitments/${id}/audit`);
-    document.getElementById('audit-tl').innerHTML=logs.map(l=>`
-      <div class="tli"><div class="tld"></div>
-        <div><div class="tla">${l.action} ${l.from_status?`${l.from_status} → ${l.to_status}`:`→ ${l.to_status}`}</div>
-        <div class="tlm">${l.actor_id} · ${new Date(l.timestamp).toLocaleString('he-IL')}</div></div>
-      </div>`).join('')||'<div style="color:var(--text2);padding:14px">אין רשומות</div>';
-    closeMo('mo-detail');openMo('mo-audit');
-  }catch(e){toast(e.message,'e')}
-}
-
-function openMo(id){document.getElementById(id).classList.add('open')}
-function closeMo(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-
-function quickLogin(){
-  const email=document.getElementById('lemail').value.trim();
-  if(!email){toast('הזן מייל','e');return}
-  enterApp(email);
-}
-function guestLogin(){enterApp('Guest')}
-async function enterApp(label){
-  document.getElementById('ls').style.display='none';
-  document.getElementById('app').style.display='flex';
-  document.getElementById('mnav').style.display='flex';
-  document.getElementById('s-uname').textContent=label;
-  document.getElementById('s-av').textContent=label[0].toUpperCase();
-  await seedDemoData();
-  loadHome();
-  toast('ברוך הבא 👋');
-}
-
-// ── DEMO DATA ──
-const DEMO=[
-  {amount:4500,due_date:'2025-08-01',creator_id:'ישראל ישראלי',recipient_id:'דוד כהן',description:'שכר דירה — אוגוסט 2025',status:'ACCEPTED'},
-  {amount:12000,due_date:'2025-09-15',creator_id:'ABC בע"מ',recipient_id:'XYZ סאפליירס',description:'תשלום ספק — פרויקט Q3',status:'SIGNED'},
-  {amount:2800,due_date:'2025-07-30',creator_id:'מיכל לוי',recipient_id:'רון אברהם',description:'הלוואה אישית',status:'SENT'},
-  {amount:35000,due_date:'2025-10-01',creator_id:'סטארטאפ טק',recipient_id:'משקיע פרטי',description:'השקעה ראשונית — Seed Round',status:'REDEEMED'},
-  {amount:1500,due_date:'2025-08-20',creator_id:'נועה שמיר',recipient_id:'גל ברק',description:'שיעורים פרטיים — חודש',status:'CREATED'},
-];
-
-async function seedDemoData(){
-  try{
-    const existing=await req('GET','/commitments');
-    if(existing.length>0)return;
-    for(const d of DEMO){
-      const c=await req('POST','/commitments',{...d,currency:'ILS'});
-      if(['SIGNED','SENT','ACCEPTED','REDEEMED'].includes(d.status)){
-        await req('POST',`/commitments/${c.id}/sign?actor_id=${encodeURIComponent(d.creator_id)}`);
-      }
-      if(['SENT','ACCEPTED','REDEEMED'].includes(d.status)){
-        await req('POST',`/commitments/${c.id}/send?actor_id=${encodeURIComponent(d.creator_id)}`);
-      }
-      if(['ACCEPTED','REDEEMED'].includes(d.status)){
-        await req('POST',`/commitments/${c.id}/accept?actor_id=${encodeURIComponent(d.recipient_id)}`);
-      }
-      if(d.status==='REDEEMED'){
-        await req('POST',`/commitments/${c.id}/redeem?actor_id=${encodeURIComponent(d.creator_id)}`);
-      }
-    }
-  }catch(e){console.log('demo seed:',e.message)}
-}
-</script>
 </body>
 </html>

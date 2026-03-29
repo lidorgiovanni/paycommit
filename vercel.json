@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/pitch/bank", "destination": "/pitch_bank.html" },
+    { "source": "/pitch", "destination": "/pitch.html" },
+    { "source": "/", "destination": "/index.html" }
+  ]
+}
