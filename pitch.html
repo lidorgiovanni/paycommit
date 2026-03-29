@@ -131,6 +131,10 @@ p{color:var(--text2);line-height:1.7;font-size:0.95rem}
 <nav>
   <div class="nav-logo">Pay<span>Commit</span></div>
   <div class="nav-dots" id="nav-dots"></div>
+  <div style="display:flex;gap:8px">
+    <a href="/pitch_bank.html" style="padding:8px 16px;background:rgba(0,212,160,0.1);border:1px solid rgba(0,212,160,0.2);border-radius:8px;color:var(--green);font-size:0.8rem;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,212,160,0.15)'" onmouseout="this.style.background='rgba(0,212,160,0.1)'">🏦 Banking</a>
+    <a href="/dpcp.html" style="padding:8px 16px;background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.2);border-radius:8px;color:var(--accent);font-size:0.8rem;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(124,111,255,0.15)'" onmouseout="this.style.background='rgba(124,111,255,0.1)'">💡 DPCP</a>
+  </div>
 </nav>
 
 <div id="deck"></div>
@@ -437,7 +441,8 @@ const slides = [
   <p style="font-size:1rem;margin-top:8px">MVP עובד · API מוכן · מוכן לפיילוט</p>
   <div class="cta-btns">
     <button class="btn-main" onclick="window.open('https://iridescent-sunshine-150a48.netlify.app','_blank')">🔗 צפה ב-Demo</button>
-    <button class="btn-outline">📧 צור קשר</button>
+    <button class="btn-outline" onclick="window.location.href='/pitch_bank.html'">🏦 Banking Edition</button>
+    <button class="btn-outline" onclick="window.location.href='/dpcp.html'">💡 DPCP Platform</button>
   </div>
 </div>`
 
