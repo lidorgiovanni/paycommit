@@ -89,6 +89,12 @@ p{color:var(--text2);line-height:1.7;font-size:0.95rem}
   .arrow{transform:rotate(90deg);margin-top:0}
   .cta-btns{flex-direction:column;align-items:center}
 }
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+.slide-in{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s ease}
+.slide-in.visible{opacity:1;transform:translateY(0)}
+.slide-in.d1{transition-delay:.05s}.slide-in.d2{transition-delay:.15s}.slide-in.d3{transition-delay:.25s}.slide-in.d4{transition-delay:.35s}.slide-in.d5{transition-delay:.45s}
+.stat-num.gold{background:linear-gradient(90deg,var(--gold),#ffe88a,var(--gold));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
+.stat-num.teal{background:linear-gradient(90deg,var(--green),#7fffd4,var(--green));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite}
 </style>
 </head>
 <body>
@@ -775,9 +781,13 @@ const observer = new IntersectionObserver(entries=>{
     if(e.isIntersecting){
       const i = e.target.id.replace('s','');
       document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j==i));
+      e.target.querySelectorAll('.card,.tag,h1,h2,.flow,.key-box,.cta-btns,.roadmap').forEach((el,idx)=>{
+        el.classList.add('slide-in','d'+Math.min(idx+1,5));
+        setTimeout(()=>el.classList.add('visible'),idx*80);
+      });
     }
   });
-},{threshold:0.5});
+},{threshold:0.3});
 slides.forEach((_,i)=>observer.observe(document.getElementById('s'+i)));
 </script>
 </body>
